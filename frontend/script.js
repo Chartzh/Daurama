@@ -1,5 +1,7 @@
 let currentLang = 'id';
 let draggedItem = null;
+
+// Language switching functionality
 const translations = {
     'id': {
         pageTitle: 'Pengenalan Sampah Bertenaga AI',

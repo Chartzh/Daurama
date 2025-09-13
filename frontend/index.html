@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -24,11 +25,13 @@
         </div>
     </nav>
 
+    <!-- Language Selector -->
     <div class="lang-selector">
         <button id="lang-id" class="lang-btn active">ID</button>
         <button id="lang-en" class="lang-btn">EN</button>
     </div>
 
+    <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-container">
             <div class="hero-content">
@@ -50,6 +53,7 @@
         </div>
     </section>
 
+    <!-- Upload Section -->
     <section id="analyze" class="upload-section">
         <div class="upload-container">
             <h2 class="section-title" id="uploadTitle">Analyze Your Waste</h2>
@@ -74,6 +78,7 @@
         </div>
     </section>
 
+    <!-- Results Section -->
     <section class="results-section" id="result">
         <div class="results-container">
             <div class="result-card">
@@ -95,13 +100,15 @@
         </div>
     </section>
 
-    <section class="game-section" id="minigame-section">
+    <!-- Mini Game Section -->
+    <section class="game-section" id="minigame-wrapper">
         <div class="game-container">
             <h3 class="game-title">Sorting Challenge</h3>
             <p>Drag the item to the correct recycling bin!</p>
             
             <div id="item-container">
-                </div>
+                <!-- Draggable item will be inserted here -->
+            </div>
 
             <div class="drop-zones-container">
                 <div class="drop-zone" id="anorganik-zone">
@@ -123,6 +130,7 @@
         </div>
     </section>
 
+    <!-- Features Section -->
     <section id="features" class="features-section">
         <div class="features-container">
             <h2 class="section-title">Why Choose EcoTrack AI?</h2>
@@ -154,6 +162,7 @@
         </div>
     </section>
 
+    <!-- Success Popup -->
     <div id="success-popup" class="popup-container">
         <div class="popup-content">
             <span class="close-btn">&times;</span>
@@ -164,7 +173,6 @@
             <p>You successfully recycled the item correctly!</p>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
