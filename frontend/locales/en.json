@@ -1,0 +1,20 @@
+{
+  "title": "EcoTrack AI",
+  "analyze_button": "Analyze Waste",
+  "analyzing_message": "Analyzing...",
+  "error_message": "An error occurred. Please try again.",
+  "result_header": "Analysis Result",
+  "object_label": "Object",
+  "instructions_label": "Recycling Instructions",
+  "objects": {
+      "cardboard box": "Cardboard Box",
+      "plastic bottle": "Plastic Bottle",
+      "glass bottle": "Glass Bottle"
+  },
+  "instructions": {
+    "cardboard box": "Flatten and place in the paper/cardboard recycling bin.",
+    "plastic bottle": "Rinse and place in the plastic recycling bin.",
+    "glass bottle": "Rinse and place in the glass recycling bin.",
+    "default": "Not a common recyclable item. Please check local waste guidelines."
+  }
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack AI - Smart Waste Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                EcoTrack AI
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="#analyze" class="cta-button">Start Analysis</a>
+        </div>
+    </nav>
+
+    <div class="lang-selector">
+        <button id="lang-id" class="lang-btn active">ID</button>
+        <button id="lang-en" class="lang-btn">EN</button>
+    </div>
+
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-subtitle">SMART ENVIRONMENT</div>
+                <h1 class="hero-title" id="pageTitle">AI-Powered Waste Recognition</h1>
+                <p class="hero-description" id="heroDescription">
+                    Transform your waste management with intelligent AI technology. Upload, analyze, and get instant recycling instructions for a sustainable future.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="scrollToSection('analyze')">Start Now</button>
+                    <button class="btn-secondary">Learn More</button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="plant-container">
+                    <div class="plant-visual">🌱</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="analyze" class="upload-section">
+        <div class="upload-container">
+            <h2 class="section-title" id="uploadTitle">Analyze Your Waste</h2>
+            <p class="section-subtitle" id="uploadSubtitle">Upload an image of your waste item and get instant recycling instructions</p>
+            
+            <div class="upload-area" onclick="document.getElementById('imageUpload').click()">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-text" id="uploadText">Click to upload or drag & drop</div>
+                <div class="upload-subtext" id="uploadSubtext">Supports JPG, PNG, GIF up to 10MB</div>
+                <input type="file" id="imageUpload" accept="image/*">
+            </div>
+
+            <div class="preview-container">
+                <img id="preview" src="" alt="Preview">
+            </div>
+
+            <button id="analyzeBtn" class="analyze-button">
+                <span id="analyzeText">Analyze Waste</span>
+            </button>
+        </div>
+    </section>
+
+    <section class="results-section" id="result">
+        <div class="results-container">
+            <div class="result-card">
+                <div class="result-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="result-title" id="analysisResultTitle">Analysis Result</h3>
+                <div class="result-info">
+                    <div class="info-card">
+                        <div class="info-label" id="resultObjectLabel">Detected Object:</div>
+                        <div class="info-value" id="objectNameDisplay">-</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label" id="resultInstructionsLabel">Recycling Instructions:</div>
+                        <div class="info-value" id="instructionsDisplay">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="game-section" id="minigame-section">
+        <div class="game-container">
+            <h3 class="game-title">Sorting Challenge</h3>
+            <p>Drag the item to the correct recycling bin!</p>
+            
+            <div id="item-container">
+                </div>
+
+            <div class="drop-zones-container">
+                <div class="drop-zone" id="anorganik-zone">
+                    <i class="fas fa-bottle-water" style="font-size: 2rem; color: #e74c3c; margin-bottom: 1rem;"></i>
+                    <strong>Anorganik</strong>
+                    <small>Plastic, Metal</small>
+                </div>
+                <div class="drop-zone" id="organik-zone">
+                    <i class="fas fa-seedling" style="font-size: 2rem; color: #27ae60; margin-bottom: 1rem;"></i>
+                    <strong>Organik</strong>
+                    <small>Food, Paper</small>
+                </div>
+                <div class="drop-zone" id="kaca-zone">
+                    <i class="fas fa-wine-bottle" style="font-size: 2rem; color: #3498db; margin-bottom: 1rem;"></i>
+                    <strong>Kaca</strong>
+                    <small>Glass</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="features-container">
+            <h2 class="section-title">Why Choose EcoTrack AI?</h2>
+            <p class="section-subtitle">Advanced features for sustainable waste management</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI Recognition</h3>
+                    <p class="feature-description">Advanced machine learning algorithms instantly identify waste types with 95% accuracy</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Instructions</h3>
+                    <p class="feature-description">Get personalized recycling instructions based on your local waste management guidelines</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3 class="feature-title">Interactive Learning</h3>
+                    <p class="feature-description">Gamified experience helps you learn proper waste sorting through engaging mini-games</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="success-popup" class="popup-container">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <div style="font-size: 3rem; color: #4CAF50; margin-bottom: 1rem;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Congratulations!</h3>
+            <p>You successfully recycled the item correctly!</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "title": "EcoTrack AI",
+  "analyze_button": "Analisis Sampah",
+  "analyzing_message": "Menganalisis...",
+  "error_message": "Terjadi kesalahan. Silakan coba lagi.",
+  "result_header": "Hasil Analisis",
+  "object_label": "Objek",
+  "instructions_label": "Instruksi Daur Ulang",
+  "objects": {
+    "cardboard box": "Kotak Kardus",
+    "plastic bottle": "Botol Plastik",
+    "glass bottle": "Botol Kaca"
+  },
+  "instructions": {
+    "cardboard box": "Ratakan dan letakkan di tempat sampah daur ulang kertas/kardus.",
+    "plastic bottle": "Bilas dan letakkan di tempat sampah daur ulang plastik.",
+    "glass bottle": "Bilas dan letakkan di tempat sampah daur ulang kaca.",
+    "default": "Bukan barang daur ulang umum. Mohon periksa panduan limbah lokal."
+  }
+}
