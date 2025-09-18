@@ -20,6 +20,10 @@
                 <li><a href="#features">Features</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><a href="report.html">
+                    <i class="fas fa-chart-line"></i>
+                    Laporan
+                </a></li>
             </ul>
             <a href="#analyze" class="cta-button">Start Analysis</a>
         </div>
@@ -94,9 +98,25 @@
                         <div class="info-value" id="objectNameDisplay">-</div>
                     </div>
                     <div class="info-card">
+                        <div class="info-label" id="resultMaterialLabel">Material Type:</div>
+                        <div class="info-value" id="materialDisplay">-</div>
+                    </div>
+                    <div class="info-card">
                         <div class="info-label" id="resultInstructionsLabel">Recycling Instructions:</div>
                         <div class="info-value" id="instructionsDisplay">-</div>
                     </div>
+                    <div class="info-card eco-impact-card">
+                        <div class="info-label" id="resultEcoImpactLabel">Environmental Impact:</div>
+                        <div class="info-value" id="ecoImpactDisplay">-</div>
+                    </div>
+                </div>
+                
+                <!-- View Report Button -->
+                <div class="result-actions">
+                    <button id="viewReportBtn" class="view-report-btn" style="display: none;">
+                        <i class="fas fa-chart-line"></i>
+                        <span>View Impact Report</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -129,7 +149,7 @@
     <!-- Features Section -->
     <section id="features" class="features-section">
         <div class="features-container">
-            <h2 class="section-title">Why Choose EcoTrack AI?</h2>
+            <h2 class="section-title">Why Choose Daurama?</h2>
             <p class="section-subtitle">Advanced features for sustainable waste management</p>
             
             <div class="features-grid">
@@ -149,10 +169,35 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Impact Tracking</h3>
+                    <p class="feature-description">Monitor your environmental impact and see how much CO₂, energy, and water you've saved</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
                         <i class="fas fa-gamepad"></i>
                     </div>
                     <h3 class="feature-title">Interactive Learning</h3>
                     <p class="feature-description">Gamified experience helps you learn proper waste sorting through engaging mini-games</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 class="feature-title">Community Leaderboard</h3>
+                    <p class="feature-description">
+                        Compete with other users and see who contributes the most to recycling. Rise to the top ranks and become an environmental hero.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Circular Economy Insights</h3>
+                    <p class="feature-description">
+                        Explore the journey of your waste from the bin to a new product. Understand the real impact of your contributions in creating a circular economy.
+                    </p>
                 </div>
             </div>
         </div>
@@ -167,6 +212,7 @@
             </div>
             <h3>Congratulations!</h3>
             <p>You successfully recycled the item correctly!</p>
+            <p style="margin-top: 1rem; color: #666;">Your environmental impact has been saved to your report.</p>
         </div>
     </div>
     <script src="script.js"></script>

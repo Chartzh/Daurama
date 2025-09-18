@@ -14,9 +14,12 @@ const translations = {
         analysisResultTitle: 'Hasil Analisis',
         resultObjectLabel: 'Objek Terdeteksi:',
         resultInstructionsLabel: 'Instruksi Daur Ulang:',
+        resultMaterialLabel: 'Jenis Material:',
+        resultEcoImpactLabel: 'Dampak Lingkungan:',
         alert_message: 'Silakan pilih gambar terlebih dahulu!',
         analyzing_message: 'Menganalisis...',
-        error_message: 'Terjadi kesalahan saat menganalisis gambar.'
+        error_message: 'Terjadi kesalahan saat menganalisis gambar.',
+        view_report: 'Lihat Laporan Dampak'
     },
     'en': {
         pageTitle: 'AI-Powered Waste Recognition',
@@ -29,11 +32,45 @@ const translations = {
         analysisResultTitle: 'Analysis Result',
         resultObjectLabel: 'Detected Object:',
         resultInstructionsLabel: 'Recycling Instructions:',
+        resultMaterialLabel: 'Material Type:',
+        resultEcoImpactLabel: 'Environmental Impact:',
         alert_message: 'Please select an image first!',
         analyzing_message: 'Analyzing...',
-        error_message: 'An error occurred while analyzing the image.'
+        error_message: 'An error occurred while analyzing the image.',
+        view_report: 'View Impact Report'
     }
 };
+
+// Global functions untuk localStorage
+function saveToHistory(resultData) {
+    try {
+        let history = JSON.parse(localStorage.getItem('dauramaHistory')) || [];
+        
+        // Tambahkan timestamp jika belum ada
+        if (!resultData.timestamp) {
+            resultData.timestamp = new Date().toISOString();
+        }
+        
+        // Tambahkan ID unik
+        resultData.id = Date.now() + Math.random();
+        
+        history.push(resultData);
+        localStorage.setItem('dauramaHistory', JSON.stringify(history));
+        
+        console.log('Data saved to history:', resultData);
+    } catch (error) {
+        console.error('Error saving to localStorage:', error);
+    }
+}
+
+function loadHistory() {
+    try {
+        return JSON.parse(localStorage.getItem('dauramaHistory')) || [];
+    } catch (error) {
+        console.error('Error loading from localStorage:', error);
+        return [];
+    }
+}
 
 function loadTranslations(lang) {
     currentLang = lang;
@@ -49,6 +86,15 @@ function loadTranslations(lang) {
     document.getElementById('analysisResultTitle').textContent = t.analysisResultTitle;
     document.getElementById('resultObjectLabel').textContent = t.resultObjectLabel;
     document.getElementById('resultInstructionsLabel').textContent = t.resultInstructionsLabel;
+
+    // Update labels baru
+    const materialLabel = document.getElementById('resultMaterialLabel');
+    const ecoImpactLabel = document.getElementById('resultEcoImpactLabel');
+    const viewReportBtn = document.getElementById('viewReportBtn');
+    
+    if (materialLabel) materialLabel.textContent = t.resultMaterialLabel;
+    if (ecoImpactLabel) ecoImpactLabel.textContent = t.resultEcoImpactLabel;
+    if (viewReportBtn) viewReportBtn.textContent = t.view_report;
 
     // Update active language button
     document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
@@ -79,7 +125,7 @@ imageUpload.addEventListener('change', function (e) {
     }
 });
 
-// Mock analysis function (replace with actual API call)
+// Updated analysis function dengan data yang lebih kaya
 analyzeBtn.addEventListener('click', async function () {
     const file = imageUpload.files[0];
     const t = translations[currentLang];
@@ -94,26 +140,110 @@ analyzeBtn.addEventListener('click', async function () {
     analyzeText.innerHTML = '<span class="loading"></span> ' + t.analyzing_message;
     analyzeBtn.disabled = true;
 
-    // Simulate API call delay
+    // Simulate API call delay dengan mock data yang diperkaya
     setTimeout(() => {
-        // Mock results - replace with actual API response
+        // Mock results dengan data yang lebih detail
         const mockResults = [
-            { object: 'Plastic Bottle', instructions: 'Remove cap and label. Rinse bottle. Place in plastic recycling bin.', type: 'anorganik' },
-            { object: 'Glass Bottle', instructions: 'Remove labels. Rinse thoroughly. Place in glass recycling bin.', type: 'kaca' },
-            { object: 'Cardboard Box', instructions: 'Flatten box. Remove any tape or staples. Place in paper recycling bin.', type: 'organik' },
-            { object: 'Aluminum Can', instructions: 'Rinse can. Remove any remaining liquid. Place in metal recycling bin.', type: 'anorganik' }
+            { 
+                object_name: 'Plastic Bottle', 
+                type: 'anorganik',
+                material: 'PET (Polyethylene Terephthalate)',
+                instructions: 'Remove cap and label. Rinse bottle. Place in plastic recycling bin.',
+                eco_impact: {
+                    co2: '250g',
+                    energy: '3 jam menyalakan lampu LED',
+                    water: '2.5 liter air bersih',
+                    decompose_time: '450 tahun'
+                },
+                timestamp: new Date().toISOString()
+            },
+            { 
+                object_name: 'Glass Bottle', 
+                type: 'kaca',
+                material: 'Kaca Soda-Lime',
+                instructions: 'Remove labels. Rinse thoroughly. Place in glass recycling bin.',
+                eco_impact: {
+                    co2: '400g',
+                    energy: '5 jam menyalakan lampu LED',
+                    water: '0.5 liter air bersih',
+                    decompose_time: '1000 tahun'
+                },
+                timestamp: new Date().toISOString()
+            },
+            { 
+                object_name: 'Cardboard Box', 
+                type: 'organik',
+                material: 'Corrugated Cardboard',
+                instructions: 'Flatten box. Remove any tape or staples. Place in paper recycling bin.',
+                eco_impact: {
+                    co2: '100g',
+                    energy: '1 jam menyalakan lampu LED',
+                    water: '5 liter air bersih',
+                    decompose_time: '3 bulan'
+                },
+                timestamp: new Date().toISOString()
+            },
+            { 
+                object_name: 'Aluminum Can', 
+                type: 'anorganik',
+                material: 'Aluminum Alloy 3004',
+                instructions: 'Rinse can. Remove any remaining liquid. Place in metal recycling bin.',
+                eco_impact: {
+                    co2: '500g',
+                    energy: '8 jam menyalakan lampu LED',
+                    water: '1 liter air bersih',
+                    decompose_time: '200 tahun'
+                },
+                timestamp: new Date().toISOString()
+            }
         ];
 
         const randomResult = mockResults[Math.floor(Math.random() * mockResults.length)];
 
-        objectNameDisplay.textContent = randomResult.object;
+        // Update tampilan hasil
+        objectNameDisplay.textContent = randomResult.object_name;
         instructionsDisplay.textContent = randomResult.instructions;
+        
+        // Update tampilan material dan eco impact baru
+        const materialDisplay = document.getElementById('materialDisplay');
+        const ecoImpactDisplay = document.getElementById('ecoImpactDisplay');
+        
+        if (materialDisplay) {
+            materialDisplay.textContent = randomResult.material;
+        }
+        
+        if (ecoImpactDisplay) {
+            ecoImpactDisplay.innerHTML = `
+                <div class="eco-impact-item">
+                    <span class="eco-label">CO₂ yang dapat dihemat:</span>
+                    <span class="eco-value">${randomResult.eco_impact.co2}</span>
+                </div>
+                <div class="eco-impact-item">
+                    <span class="eco-label">Energi yang dihemat:</span>
+                    <span class="eco-value">${randomResult.eco_impact.energy}</span>
+                </div>
+                <div class="eco-impact-item">
+                    <span class="eco-label">Air yang dihemat:</span>
+                    <span class="eco-value">${randomResult.eco_impact.water}</span>
+                </div>
+                <div class="eco-impact-item">
+                    <span class="eco-label">Waktu terurai alami:</span>
+                    <span class="eco-value">${randomResult.eco_impact.decompose_time}</span>
+                </div>
+            `;
+        }
 
         // Show results section
         document.getElementById('result').style.display = 'block';
+        
+        // Show view report button
+        const viewReportBtn = document.getElementById('viewReportBtn');
+        if (viewReportBtn) {
+            viewReportBtn.style.display = 'inline-block';
+        }
 
         // Start mini-game
-        startGame(randomResult.type);
+        startGame(randomResult.type, randomResult);
 
         // Reset button state
         analyzeText.textContent = t.analyzeText;
@@ -124,8 +254,8 @@ analyzeBtn.addEventListener('click', async function () {
     }, 2000);
 });
 
-// Mini-game functionality
-function startGame(itemType) {
+// Mini-game functionality dengan data storage
+function startGame(itemType, resultData) {
     const gameSection = document.getElementById('minigame-wrapper');
     const itemContainer = document.getElementById('item-container');
 
@@ -137,6 +267,9 @@ function startGame(itemType) {
     item.draggable = true;
     item.textContent = getItemIcon(itemType);
     item.dataset.type = itemType;
+    
+    // Store complete result data in dataset
+    item.dataset.result = JSON.stringify(resultData);
 
     // Clear previous items
     itemContainer.innerHTML = '';
@@ -201,7 +334,15 @@ function handleDrop(e) {
         const zoneType = this.id.replace('-zone', '');
 
         if (itemType === zoneType) {
-            // Correct drop
+            // Correct drop - save to history
+            try {
+                const resultData = JSON.parse(draggedItem.dataset.result);
+                saveToHistory(resultData);
+                console.log('Data berhasil disimpan ke riwayat');
+            } catch (error) {
+                console.error('Error parsing result data:', error);
+            }
+            
             showSuccessPopup();
             draggedItem.style.transform = 'scale(0)';
             setTimeout(() => {
@@ -267,6 +408,14 @@ document.head.appendChild(style);
 // Initialize page
 document.addEventListener('DOMContentLoaded', function () {
     loadTranslations(currentLang);
+    
+    // Add event listener untuk tombol "View Report"
+    const viewReportBtn = document.getElementById('viewReportBtn');
+    if (viewReportBtn) {
+        viewReportBtn.addEventListener('click', function() {
+            window.location.href = 'report.html';
+        });
+    }
 });
 
 // Drag and drop for upload area
