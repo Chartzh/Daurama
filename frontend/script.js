@@ -19,7 +19,26 @@ const translations = {
         alert_message: 'Silakan pilih gambar terlebih dahulu!',
         analyzing_message: 'Menganalisis...',
         error_message: 'Terjadi kesalahan saat menganalisis gambar.',
-        view_report: 'Lihat Laporan Dampak'
+        view_report: 'Lihat Laporan Dampak',
+        leaderboard_title: 'Papan Peringkat Daur Ulang',
+        enter_name_prompt: 'Masukkan nama Anda untuk Leaderboard:',
+        submit_name: 'Kirim',
+        leaderboard_rank: 'Peringkat',
+        leaderboard_name: 'Nama',
+        leaderboard_items: 'Item Didaur Ulang',
+        leaderboard_co2: 'CO₂ Dihemat',
+        leaderboard_energy: 'Energi Dihemat',
+        leaderboard_water: 'Air Dihemat',
+        no_leaderboard_data: 'Belum ada data di papan peringkat.',
+        congratulations_title: 'Selamat!',
+        correct_sort_message: 'Anda berhasil mendaur ulang item dengan benar!',
+        impact_saved_message: 'Dampak lingkungan Anda telah disimpan ke laporan.',
+        incorrect_sort_message: 'Salah! Coba lagi.',
+        minigame_title: 'Tantangan Pemilahan',
+        minigame_instruction: 'Seret item ke tempat sampah daur ulang yang benar!',
+        inorganic_bin: 'Anorganik',
+        organic_bin: 'Organik',
+        glass_bin: 'Kaca',
     },
     'en': {
         pageTitle: 'AI-Powered Waste Recognition',
@@ -37,7 +56,26 @@ const translations = {
         alert_message: 'Please select an image first!',
         analyzing_message: 'Analyzing...',
         error_message: 'An error occurred while analyzing the image.',
-        view_report: 'View Impact Report'
+        view_report: 'View Impact Report',
+        leaderboard_title: 'Recycling Leaderboard',
+        enter_name_prompt: 'Enter your name for the Leaderboard:',
+        submit_name: 'Submit',
+        leaderboard_rank: 'Rank',
+        leaderboard_name: 'Name',
+        leaderboard_items: 'Items Recycled',
+        leaderboard_co2: 'CO₂ Saved',
+        leaderboard_energy: 'Energy Saved',
+        leaderboard_water: 'Water Saved',
+        no_leaderboard_data: 'No leaderboard data yet.',
+        congratulations_title: 'Congratulations!',
+        correct_sort_message: 'You successfully recycled the item correctly!',
+        impact_saved_message: 'Your environmental impact has been saved to your report.',
+        incorrect_sort_message: 'Incorrect! Try again.',
+        minigame_title: 'Sorting Challenge',
+        minigame_instruction: 'Drag the item to the correct recycling bin!',
+        inorganic_bin: 'Inorganic',
+        organic_bin: 'Organic',
+        glass_bin: 'Glass',
     }
 };
 
@@ -45,18 +83,18 @@ const translations = {
 function saveToHistory(resultData) {
     try {
         let history = JSON.parse(localStorage.getItem('dauramaHistory')) || [];
-        
+
         // Tambahkan timestamp jika belum ada
         if (!resultData.timestamp) {
             resultData.timestamp = new Date().toISOString();
         }
-        
+
         // Tambahkan ID unik
         resultData.id = Date.now() + Math.random();
-        
+
         history.push(resultData);
         localStorage.setItem('dauramaHistory', JSON.stringify(history));
-        
+
         console.log('Data saved to history:', resultData);
     } catch (error) {
         console.error('Error saving to localStorage:', error);
@@ -91,10 +129,32 @@ function loadTranslations(lang) {
     const materialLabel = document.getElementById('resultMaterialLabel');
     const ecoImpactLabel = document.getElementById('resultEcoImpactLabel');
     const viewReportBtn = document.getElementById('viewReportBtn');
-    
+    const minigameTitle = document.querySelector('#minigame-wrapper .game-title');
+    const minigameInstruction = document.querySelector('#minigame-wrapper p');
+    const inorganicZoneLabel = document.querySelector('#anorganik-zone .bin-label'); // Assuming you add this label
+    const organicZoneLabel = document.querySelector('#organik-zone .bin-label'); // Assuming you add this label
+    const glassZoneLabel = document.querySelector('#kaca-zone .bin-label'); // Assuming you add this label
+    const successPopupTitle = document.querySelector('#success-popup h3');
+    const successPopupMessage1 = document.querySelector('#success-popup p:nth-of-type(1)');
+    const successPopupMessage2 = document.querySelector('#success-popup p:nth-of-type(2)');
+    const nameInputPrompt = document.querySelector('#name-input-popup .popup-content p');
+    const submitNameBtn = document.getElementById('submitNameBtn');
+
+
+
     if (materialLabel) materialLabel.textContent = t.resultMaterialLabel;
     if (ecoImpactLabel) ecoImpactLabel.textContent = t.resultEcoImpactLabel;
     if (viewReportBtn) viewReportBtn.textContent = t.view_report;
+    if (minigameTitle) minigameTitle.textContent = t.minigame_title;
+    if (minigameInstruction) minigameInstruction.textContent = t.minigame_instruction;
+    if (inorganicZoneLabel) inorganicZoneLabel.textContent = t.inorganic_bin;
+    if (organicZoneLabel) organicZoneLabel.textContent = t.organic_bin;
+    if (glassZoneLabel) glassZoneLabel.textContent = t.glass_bin;
+    if (successPopupTitle) successPopupTitle.textContent = t.congratulations_title;
+    if (successPopupMessage1) successPopupMessage1.textContent = t.correct_sort_message;
+    if (successPopupMessage2) successPopupMessage2.textContent = t.impact_saved_message;
+    if (nameInputPrompt) nameInputPrompt.textContent = t.enter_name_prompt;
+    if (submitNameBtn) submitNameBtn.textContent = t.submit_name;
 
     // Update active language button
     document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
@@ -144,8 +204,8 @@ analyzeBtn.addEventListener('click', async function () {
     setTimeout(() => {
         // Mock results dengan data yang lebih detail
         const mockResults = [
-            { 
-                object_name: 'Plastic Bottle', 
+            {
+                object_name: 'Plastic Bottle',
                 type: 'anorganik',
                 material: 'PET (Polyethylene Terephthalate)',
                 instructions: 'Remove cap and label. Rinse bottle. Place in plastic recycling bin.',
@@ -157,8 +217,8 @@ analyzeBtn.addEventListener('click', async function () {
                 },
                 timestamp: new Date().toISOString()
             },
-            { 
-                object_name: 'Glass Bottle', 
+            {
+                object_name: 'Glass Bottle',
                 type: 'kaca',
                 material: 'Kaca Soda-Lime',
                 instructions: 'Remove labels. Rinse thoroughly. Place in glass recycling bin.',
@@ -170,8 +230,8 @@ analyzeBtn.addEventListener('click', async function () {
                 },
                 timestamp: new Date().toISOString()
             },
-            { 
-                object_name: 'Cardboard Box', 
+            {
+                object_name: 'Cardboard Box',
                 type: 'organik',
                 material: 'Corrugated Cardboard',
                 instructions: 'Flatten box. Remove any tape or staples. Place in paper recycling bin.',
@@ -183,8 +243,8 @@ analyzeBtn.addEventListener('click', async function () {
                 },
                 timestamp: new Date().toISOString()
             },
-            { 
-                object_name: 'Aluminum Can', 
+            {
+                object_name: 'Aluminum Can',
                 type: 'anorganik',
                 material: 'Aluminum Alloy 3004',
                 instructions: 'Rinse can. Remove any remaining liquid. Place in metal recycling bin.',
@@ -203,15 +263,15 @@ analyzeBtn.addEventListener('click', async function () {
         // Update tampilan hasil
         objectNameDisplay.textContent = randomResult.object_name;
         instructionsDisplay.textContent = randomResult.instructions;
-        
+
         // Update tampilan material dan eco impact baru
         const materialDisplay = document.getElementById('materialDisplay');
         const ecoImpactDisplay = document.getElementById('ecoImpactDisplay');
-        
+
         if (materialDisplay) {
             materialDisplay.textContent = randomResult.material;
         }
-        
+
         if (ecoImpactDisplay) {
             ecoImpactDisplay.innerHTML = `
                 <div class="eco-impact-item">
@@ -235,7 +295,7 @@ analyzeBtn.addEventListener('click', async function () {
 
         // Show results section
         document.getElementById('result').style.display = 'block';
-        
+
         // Show view report button
         const viewReportBtn = document.getElementById('viewReportBtn');
         if (viewReportBtn) {
@@ -267,7 +327,7 @@ function startGame(itemType, resultData) {
     item.draggable = true;
     item.textContent = getItemIcon(itemType);
     item.dataset.type = itemType;
-    
+
     // Store complete result data in dataset
     item.dataset.result = JSON.stringify(resultData);
 
@@ -334,32 +394,117 @@ function handleDrop(e) {
         const zoneType = this.id.replace('-zone', '');
 
         if (itemType === zoneType) {
-            // Correct drop - save to history
+            // Correct drop
             try {
                 const resultData = JSON.parse(draggedItem.dataset.result);
-                saveToHistory(resultData);
-                console.log('Data berhasil disimpan ke riwayat');
+                // saveToHistory(resultData); // Moved to after name input
+                console.log('Item correctly sorted. Prompting for name...');
+                
+                showSuccessPopup(); // Show success message first
+                
+                // Hide draggable item
+                draggedItem.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    document.getElementById('item-container').innerHTML = '<div style="color: #4CAF50; font-size: 2rem;"><i class="fas fa-check-circle"></i> Correct!</div>';
+                    showNameInputPopup(resultData); // Show name input after success popup
+                }, 1000); // Delay to allow success popup to be seen
+                
             } catch (error) {
                 console.error('Error parsing result data:', error);
             }
-            
-            showSuccessPopup();
-            draggedItem.style.transform = 'scale(0)';
-            setTimeout(() => {
-                document.getElementById('item-container').innerHTML = '<div style="color: #4CAF50; font-size: 2rem;"><i class="fas fa-check-circle"></i> Correct!</div>';
-            }, 300);
         } else {
             // Incorrect drop
             draggedItem.style.animation = 'shake 0.5s ease-in-out';
             setTimeout(() => {
                 draggedItem.style.animation = '';
             }, 500);
+            alert(translations[currentLang].incorrect_sort_message); // NEW: Add incorrect message
         }
     }
 }
 
+// NEW: Function to show name input popup
+function showNameInputPopup(resultData) {
+    const nameInputPopup = document.getElementById('name-input-popup');
+    const userNameInput = document.getElementById('userNameInput');
+    const submitNameBtn = document.getElementById('submitNameBtn');
+    const closeNamePopupBtn = document.getElementById('closeNamePopup');
+    const t = translations[currentLang];
+
+    document.getElementById('enterNameTitle').textContent = t.congratulations_title; // Use congratulations title
+    document.getElementById('enterNamePrompt').textContent = t.enter_name_prompt;
+    submitNameBtn.textContent = t.submit_name;
+
+    userNameInput.value = localStorage.getItem('dauramaUserName') || ''; // Pre-fill if name exists
+    nameInputPopup.style.display = 'flex';
+
+    const handleSubmit = () => {
+        let userName = userNameInput.value.trim();
+        if (userName === '') {
+            userName = 'Anonim'; // Default name if empty
+        }
+        localStorage.setItem('dauramaUserName', userName); // Save name for future use
+
+        // Save to history and update leaderboard
+        saveToHistory({ ...resultData, userName: userName }); // Save with userName
+        updateLeaderboard(userName, resultData); // Update leaderboard
+
+        nameInputPopup.style.display = 'none';
+        submitNameBtn.removeEventListener('click', handleSubmit); // Remove listener to prevent multiple calls
+        closeNamePopupBtn.removeEventListener('click', handleClose);
+    };
+
+    const handleClose = () => {
+        nameInputPopup.style.display = 'none';
+        submitNameBtn.removeEventListener('click', handleSubmit);
+        closeNamePopupBtn.removeEventListener('click', handleClose);
+        // If user closes without submitting, still save to history as Anonim
+        if (!localStorage.getItem('dauramaUserName')) {
+            saveToHistory({ ...resultData, userName: 'Anonim' });
+            updateLeaderboard('Anonim', resultData);
+        }
+    };
+
+    submitNameBtn.addEventListener('click', handleSubmit);
+    closeNamePopupBtn.addEventListener('click', handleClose);
+}
+
+// NEW: Add updateLeaderboard function to script.js (for consistency, though report.js also has it)
+function updateLeaderboard(userName, resultData) {
+    let leaderboard = JSON.parse(localStorage.getItem('dauramaLeaderboard')) || [];
+    let userEntry = leaderboard.find(entry => entry.name === userName);
+
+    const co2Saved = parseInt(resultData.eco_impact?.co2?.match(/(\d+)/)?.[1] || 0);
+    const energySaved = parseFloat(resultData.eco_impact?.energy?.match(/(\d+\.?\d*)/)?.[1] || 0);
+    const waterSaved = parseFloat(resultData.eco_impact?.water?.match(/(\d+\.?\d*)/)?.[1] || 0);
+
+    if (userEntry) {
+        userEntry.itemsRecycled = (userEntry.itemsRecycled || 0) + 1;
+        userEntry.totalCO2Saved = (userEntry.totalCO2Saved || 0) + co2Saved;
+        userEntry.totalEnergySaved = (userEntry.totalEnergySaved || 0) + energySaved;
+        userEntry.totalWaterSaved = (userEntry.totalWaterSaved || 0) + waterSaved;
+    } else {
+        userEntry = {
+            name: userName,
+            itemsRecycled: 1,
+            totalCO2Saved: co2Saved,
+            totalEnergySaved: energySaved,
+            totalWaterSaved: waterSaved,
+        };
+        leaderboard.push(userEntry);
+    }
+
+    leaderboard.sort((a, b) => b.itemsRecycled - a.itemsRecycled);
+    localStorage.setItem('dauramaLeaderboard', JSON.stringify(leaderboard));
+}
+
 function showSuccessPopup() {
     const popup = document.getElementById('success-popup');
+    const t = translations[currentLang];
+    document.querySelector('#success-popup h3').textContent = t.congratulations_title;
+    document.querySelector('#success-popup p:nth-of-type(1)').textContent = t.correct_sort_message;
+    document.querySelector('#success-popup p:nth-of-type(2)').textContent = t.impact_saved_message;
+
     popup.style.display = 'flex';
 
     // Auto close after 3 seconds
@@ -407,9 +552,8 @@ document.head.appendChild(style);
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', function () {
-    loadTranslations(currentLang);
+    loadTranslations(currentLang); // This will now also update the new popup texts
     
-    // Add event listener untuk tombol "View Report"
     const viewReportBtn = document.getElementById('viewReportBtn');
     if (viewReportBtn) {
         viewReportBtn.addEventListener('click', function() {

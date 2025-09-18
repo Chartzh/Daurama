@@ -311,3 +311,117 @@ setInterval(() => {
 
 // Store initial data
 window.lastHistoryData = JSON.stringify(loadHistory());
+
+function loadLeaderboard() {
+    try {
+        return JSON.parse(localStorage.getItem('dauramaLeaderboard')) || [];
+    } catch (error) {
+        console.error('Error loading leaderboard from localStorage:', error);
+        return [];
+    }
+}
+
+// NEW: Fungsi untuk menyimpan data leaderboard ke localStorage
+function saveLeaderboard(leaderboardData) {
+    try {
+        localStorage.setItem('dauramaLeaderboard', JSON.stringify(leaderboardData));
+    } catch (error) {
+        console.error('Error saving leaderboard to localStorage:', error);
+    }
+}
+
+// NEW: Fungsi untuk memperbarui leaderboard dengan data baru
+function updateLeaderboard(userName, resultData) {
+    let leaderboard = loadLeaderboard();
+    let userEntry = leaderboard.find(entry => entry.name === userName);
+
+    // Extract numeric values from eco_impact
+    const co2Saved = parseInt(resultData.eco_impact?.co2?.match(/(\d+)/)?.[1] || 0);
+    const energySaved = parseFloat(resultData.eco_impact?.energy?.match(/(\d+\.?\d*)/)?.[1] || 0);
+    const waterSaved = parseFloat(resultData.eco_impact?.water?.match(/(\d+\.?\d*)/)?.[1] || 0);
+
+    if (userEntry) {
+        userEntry.itemsRecycled = (userEntry.itemsRecycled || 0) + 1;
+        userEntry.totalCO2Saved = (userEntry.totalCO2Saved || 0) + co2Saved;
+        userEntry.totalEnergySaved = (userEntry.totalEnergySaved || 0) + energySaved;
+        userEntry.totalWaterSaved = (userEntry.totalWaterSaved || 0) + waterSaved;
+    } else {
+        userEntry = {
+            name: userName,
+            itemsRecycled: 1,
+            totalCO2Saved: co2Saved,
+            totalEnergySaved: energySaved,
+            totalWaterSaved: waterSaved,
+        };
+        leaderboard.push(userEntry);
+    }
+
+    // Sort leaderboard by itemsRecycled (descending)
+    leaderboard.sort((a, b) => b.itemsRecycled - a.itemsRecycled);
+    saveLeaderboard(leaderboard);
+    console.log('Leaderboard updated:', leaderboard);
+}
+
+// NEW: Fungsi untuk merender leaderboard
+function renderLeaderboard(leaderboardData) {
+    const leaderboardList = document.getElementById('leaderboard-list');
+    const t = translations[currentLang]; // Assuming currentLang is available or passed
+
+    if (leaderboardData.length === 0) {
+        leaderboardList.innerHTML = `
+            <div class="no-history">
+                <div class="no-history-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <p>${t.no_leaderboard_data}</p>
+            </div>
+        `;
+        return;
+    }
+
+    let leaderboardHTML = `
+        <div class="leaderboard-header">
+            <div>${t.leaderboard_rank}</div>
+            <div>${t.leaderboard_name}</div>
+            <div>${t.leaderboard_items}</div>
+            <div>${t.leaderboard_co2}</div>
+            <div>${t.leaderboard_energy}</div>
+            <div>${t.leaderboard_water}</div>
+        </div>
+    `;
+
+    leaderboardData.forEach((entry, index) => {
+        leaderboardHTML += `
+            <div class="leaderboard-item">
+                <div class="leaderboard-rank">${index + 1}</div>
+                <div class="leaderboard-name">${entry.name}</div>
+                <div class="leaderboard-value">${entry.itemsRecycled}</div>
+                <div class="leaderboard-value">${entry.totalCO2Saved}g</div>
+                <div class="leaderboard-value">${entry.totalEnergySaved.toFixed(1)} jam</div>
+                <div class="leaderboard-value">${entry.totalWaterSaved.toFixed(1)}L</div>
+            </div>
+        `;
+    });
+
+    leaderboardList.innerHTML = leaderboardHTML;
+}
+
+// NEW: Fungsi utama untuk menginisialisasi halaman laporan
+function initializeReportPage() {
+    const historyData = loadHistory();
+    const stats = calculateStatistics(historyData);
+    const leaderboardData = loadLeaderboard(); // Load leaderboard data
+
+    renderSummaryDashboard(stats);
+    renderHistoryList(historyData);
+    renderLeaderboard(leaderboardData); // Render leaderboard
+
+    // Event listeners
+    document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
+    document.getElementById('exportBtn').addEventListener('click', exportData);
+
+    // NEW: Update leaderboard and section titles with translations
+    const t = translations[currentLang]; // Assuming currentLang is available
+    document.getElementById('leaderboardTitle').textContent = t.leaderboard_title;
+    document.getElementById('leaderboardSubtitle').textContent = t.leaderboard_subtitle;
+}

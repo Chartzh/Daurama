@@ -84,7 +84,7 @@
         </div>
     </section>
 
-    <!-- Results Section -->
+        <!-- Results Section -->
     <section class="results-section" id="result">
         <div class="results-container">
             <div class="result-card">
@@ -92,7 +92,7 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <h3 class="result-title" id="analysisResultTitle">Analysis Result</h3>
-                <div class="result-info">
+                <div class="result-grid"> <!-- Changed from result-info -->
                     <div class="info-card">
                         <div class="info-label" id="resultObjectLabel">Detected Object:</div>
                         <div class="info-value" id="objectNameDisplay">-</div>
@@ -101,17 +101,18 @@
                         <div class="info-label" id="resultMaterialLabel">Material Type:</div>
                         <div class="info-value" id="materialDisplay">-</div>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card full-width"> <!-- Added full-width class -->
                         <div class="info-label" id="resultInstructionsLabel">Recycling Instructions:</div>
                         <div class="info-value" id="instructionsDisplay">-</div>
                     </div>
-                    <div class="info-card eco-impact-card">
+                    <div class="info-card eco-impact-card full-width"> <!-- Added full-width class -->
                         <div class="info-label" id="resultEcoImpactLabel">Environmental Impact:</div>
-                        <div class="info-value" id="ecoImpactDisplay">-</div>
+                        <div class="eco-impact-display" id="ecoImpactDisplay">
+                            <!-- Eco impact items will be inserted here by JS -->
+                        </div>
                     </div>
                 </div>
                 
-                <!-- View Report Button -->
                 <div class="result-actions">
                     <button id="viewReportBtn" class="view-report-btn" style="display: none;">
                         <i class="fas fa-chart-line"></i>
@@ -135,16 +136,43 @@
             <div class="drop-zones-container">
                 <div class="drop-zone" id="anorganik-zone">
                     <img src="source/inorganic.png" alt="Anorganik" width="100">
+                    <span class="bin-label" id="inorganic-bin-label">Anorganik</span> <!-- NEW -->
                 </div>
                 <div class="drop-zone" id="organik-zone">
                     <img src="source/organic.png" alt="Organik" width="100">
+                    <span class="bin-label" id="organic-bin-label">Organik</span> <!-- NEW -->
                 </div>
                 <div class="drop-zone" id="kaca-zone">
                     <img src="source/glass.png" alt="Kaca" width="100">
+                    <span class="bin-label" id="glass-bin-label">Kaca</span> <!-- NEW -->
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Success Popup -->
+    <div id="success-popup" class="popup-container">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <div style="font-size: 3rem; color: #4CAF50; margin-bottom: 1rem;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Congratulations!</h3>
+            <p>You successfully recycled the item correctly!</p>
+            <p style="margin-top: 1rem; color: #666;">Your environmental impact has been saved to your report.</p>
+        </div>
+    </div>
+
+    <!-- Name Input Popup  -->
+    <div id="name-input-popup" class="popup-container">
+        <div class="popup-content">
+            <span class="close-btn" id="closeNamePopup">&times;</span>
+            <h3><span id="enterNameTitle">Masukkan Nama Anda</span></h3>
+            <p id="enterNamePrompt">Masukkan nama Anda untuk Leaderboard:</p>
+            <input type="text" id="userNameInput" placeholder="Nama Anda" maxlength="20" class="name-input-field">
+            <button id="submitNameBtn" class="btn-primary" style="margin-top: 1rem;">Kirim</button>
+        </div>
+    </div>
 
     <!-- Features Section -->
     <section id="features" class="features-section">
@@ -203,18 +231,6 @@
         </div>
     </section>
 
-    <!-- Success Popup -->
-    <div id="success-popup" class="popup-container">
-        <div class="popup-content">
-            <span class="close-btn">&times;</span>
-            <div style="font-size: 3rem; color: #4CAF50; margin-bottom: 1rem;">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h3>Congratulations!</h3>
-            <p>You successfully recycled the item correctly!</p>
-            <p style="margin-top: 1rem; color: #666;">Your environmental impact has been saved to your report.</p>
-        </div>
-    </div>
     <script src="script.js"></script>
 </body>
 </html>

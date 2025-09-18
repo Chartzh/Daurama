@@ -1,85 +1,96 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Dampak - Daurama</title>
-    <link rel="icon" type="image/png" href="source/Daurama_logo.png">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="report.css">
-    <link rel="stylesheet" href="style.css">
-
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <img src="source/Daurama_textLogo.png" alt="Daurama Logo" style="height: 50px;">
+    <!DOCTYPE html>
+    <html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Laporan Dampak - Daurama</title>
+        <link rel="icon" type="image/png" href="source/Daurama_logo.png">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="report.css">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <!-- Navigation (unchanged) -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="source/Daurama_textLogo.png" alt="Daurama Logo" style="height: 50px;">
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#features">Features</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="report.html">
+                        <i class="fas fa-chart-line"></i>
+                        Laporan
+                    </a></li>
+                </ul>
+                <a href="index.html#analyze" class="cta-button">Start Analysis</a>
             </div>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="index.html#features">Features</a></li>
-                <li><a href="index.html#about">About</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-                <li><a href="report.html">
+        </nav>
+
+        <!-- Report Hero Section (unchanged) -->
+        <section class="report-hero">
+            <div class="report-container">
+                <h1 class="report-title">
                     <i class="fas fa-chart-line"></i>
-                    Laporan
-                </a></li>
-            </ul>
-            <a href="index.html#analyze" class="cta-button">Start Analysis</a>
-        </div>
-    </nav>
-
-    <!-- Report Hero Section -->
-    <section class="report-hero">
-        <div class="report-container">
-            <h1 class="report-title">
-                <i class="fas fa-chart-line"></i>
-                Laporan Dampak Lingkungan
-            </h1>
-            <p class="report-subtitle">
-                Lihat kontribusi Anda terhadap lingkungan melalui aktivitas daur ulang
-            </p>
-            <a href="index.html" class="back-button">
-                <i class="fas fa-arrow-left"></i>
-                Kembali ke Beranda
-            </a>
-        </div>
-    </section>
-
-    <!-- Summary Dashboard -->
-    <section class="section-header">
-        <div class="report-container">
-            <h2 class="section-title">Ringkasan Dampak</h2>
-            <div id="summary-dashboard" class="summary-dashboard">
-                <!-- Dashboard cards akan diisi oleh JavaScript -->
+                    Laporan Dampak Lingkungan
+                </h1>
+                <p class="report-subtitle">
+                    Lihat kontribusi Anda terhadap lingkungan melalui aktivitas daur ulang
+                </p>
+                <a href="index.html" class="back-button">
+                    <i class="fas fa-arrow-left"></i>
+                    Kembali ke Beranda
+                </a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- History Section -->
-    <section class="history-section">
-        <div class="report-container">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h2 class="section-title" style="margin: 0;">Riwayat Aktivitas Daur Ulang</h2>
-                <div>
-                    <button id="exportBtn" class="export-btn">
-                        <i class="fas fa-download"></i>
-                        Export Data
-                    </button>
-                    <button id="clearHistoryBtn" class="clear-history-btn">
-                        <i class="fas fa-trash"></i>
-                        Hapus Riwayat
-                    </button>
+        <!-- Summary Dashboard (unchanged) -->
+        <section class="section-header">
+            <div class="report-container">
+                <h2 class="section-title">Ringkasan Dampak</h2>
+                <div id="summary-dashboard" class="summary-dashboard">
+                    <!-- Dashboard cards akan diisi oleh JavaScript -->
                 </div>
             </div>
-            <div id="history-list" class="history-list">
-                <!-- History items akan diisi oleh JavaScript -->
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <script src="report.js"></script>
-</body>
-</html>
+        <!-- Leaderboard Section (NEW) -->
+        <section class="history-section" style="background: white;"> <!-- Reusing history-section styling for consistency -->
+            <div class="report-container">
+                <h2 class="section-title" id="leaderboardTitle">Papan Peringkat Daur Ulang</h2>
+                <p class="section-subtitle" id="leaderboardSubtitle">Lihat siapa yang paling banyak berkontribusi!</p>
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <!-- Leaderboard items will be filled by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section (unchanged, but ensure IDs are unique if you copy-paste) -->
+        <section class="history-section">
+            <div class="report-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 class="section-title" style="margin: 0;">Riwayat Aktivitas Daur Ulang</h2>
+                    <div>
+                        <button id="exportBtn" class="export-btn">
+                            <i class="fas fa-download"></i>
+                            Export Data
+                        </button>
+                        <button id="clearHistoryBtn" class="clear-history-btn">
+                            <i class="fas fa-trash"></i>
+                            Hapus Riwayat
+                        </button>
+                    </div>
+                </div>
+                <div id="history-list" class="history-list">
+                    <!-- History items akan diisi oleh JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <script src="report.js"></script>
+    </body>
+    </html>
+    

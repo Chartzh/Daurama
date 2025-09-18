@@ -142,6 +142,66 @@
     margin-top: 1rem;
 }
 
+/* Leaderboard Styles */
+.leaderboard-list {
+    margin-top: 2rem;
+    background: #f8f9fa;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.leaderboard-header,
+.leaderboard-item {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr;
+    /* Rank, Name, Items, CO2, Energy, Water */
+    gap: 1rem;
+    padding: 1rem 2rem;
+    align-items: center;
+}
+
+.leaderboard-header {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.95rem;
+}
+
+.leaderboard-item {
+    background: white;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s ease;
+}
+
+.leaderboard-item:nth-child(even) {
+    background: #fefefe;
+}
+
+.leaderboard-item:hover {
+    background-color: #e8f5e8;
+}
+
+.leaderboard-item:last-child {
+    border-bottom: none;
+}
+
+.leaderboard-rank {
+    font-weight: bold;
+    color: #2d5a3d;
+}
+
+.leaderboard-name {
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.leaderboard-value {
+    color: #666;
+    font-size: 0.9rem;
+}
+
 .impact-item {
     background: rgba(76, 175, 80, 0.1);
     padding: 0.5rem;
@@ -248,5 +308,18 @@
 
     .summary-dashboard {
         grid-template-columns: 1fr;
+    }
+
+    .leaderboard-header,
+    .leaderboard-item {
+        grid-template-columns: 1fr;
+        /* Stack items on small screens */
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .leaderboard-header div,
+    .leaderboard-item div {
+        margin-bottom: 0.5rem;
     }
 }
