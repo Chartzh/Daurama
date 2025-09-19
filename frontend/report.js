@@ -1,13 +1,3 @@
-// Fungsi untuk memuat data riwayat dari localStorage
-function loadHistory() {
-    try {
-        return JSON.parse(localStorage.getItem('dauramaHistory')) || [];
-    } catch (error) {
-        console.error('Error loading from localStorage:', error);
-        return [];
-    }
-}
-
 // Fungsi untuk menghitung statistik dari data riwayat
 function calculateStatistics(historyData) {
     const stats = {
@@ -223,12 +213,24 @@ function formatTimestamp(timestamp) {
     
     const date = new Date(timestamp);
     const now = new Date();
-    const diffTime = now - date;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays === 1) {
+    const diffSeconds = Math.round((now.getTime() - date.getTime()) / 1000);
+    const diffMinutes = Math.round(diffSeconds / 60);
+    const diffHours = Math.round(diffMinutes / 60);
+    
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfTimestampDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const diffDays = Math.round((startOfToday - startOfTimestampDay) / (1000 * 60 * 60 * 24));
+
+    if (diffSeconds < 60) {
+        return `${diffSeconds} detik yang lalu`;
+    } else if (diffMinutes < 60) {
+        return `${diffMinutes} menit yang lalu`;
+    } else if (diffHours < 24 && diffDays === 0) {
+        return `${diffHours} jam yang lalu`;
+    } else if (diffDays === 1) {
         return 'Kemarin';
-    } else if (diffDays <= 7) {
+    } else if (diffDays > 1 && diffDays <= 7) {
         return `${diffDays} hari yang lalu`;
     } else {
         return date.toLocaleDateString('id-ID', {
@@ -284,23 +286,25 @@ function exportData() {
     window.URL.revokeObjectURL(url);
 }
 
-// Fungsi utama untuk menginisialisasi halaman
 function initializeReportPage() {
     const historyData = loadHistory();
     const stats = calculateStatistics(historyData);
-    
+    const leaderboardData = loadLeaderboard();
+
     renderSummaryDashboard(stats);
     renderHistoryList(historyData);
-    
+    renderLeaderboard(leaderboardData);
+
     // Event listeners
-    document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
-    document.getElementById('exportBtn').addEventListener('click', exportData);
+    const clearBtn = document.getElementById('clearHistoryBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    
+    if (clearBtn) clearBtn.addEventListener('click', clearHistory);
+    if (exportBtn) exportBtn.addEventListener('click', exportData);
 }
 
-// Jalankan ketika DOM sudah loaded
 document.addEventListener('DOMContentLoaded', initializeReportPage);
 
-// Auto-refresh data setiap 30 detik jika ada perubahan
 setInterval(() => {
     const currentData = JSON.stringify(loadHistory());
     if (currentData !== window.lastHistoryData) {
@@ -309,63 +313,12 @@ setInterval(() => {
     }
 }, 30000);
 
-// Store initial data
 window.lastHistoryData = JSON.stringify(loadHistory());
 
-function loadLeaderboard() {
-    try {
-        return JSON.parse(localStorage.getItem('dauramaLeaderboard')) || [];
-    } catch (error) {
-        console.error('Error loading leaderboard from localStorage:', error);
-        return [];
-    }
-}
-
-// NEW: Fungsi untuk menyimpan data leaderboard ke localStorage
-function saveLeaderboard(leaderboardData) {
-    try {
-        localStorage.setItem('dauramaLeaderboard', JSON.stringify(leaderboardData));
-    } catch (error) {
-        console.error('Error saving leaderboard to localStorage:', error);
-    }
-}
-
-// NEW: Fungsi untuk memperbarui leaderboard dengan data baru
-function updateLeaderboard(userName, resultData) {
-    let leaderboard = loadLeaderboard();
-    let userEntry = leaderboard.find(entry => entry.name === userName);
-
-    // Extract numeric values from eco_impact
-    const co2Saved = parseInt(resultData.eco_impact?.co2?.match(/(\d+)/)?.[1] || 0);
-    const energySaved = parseFloat(resultData.eco_impact?.energy?.match(/(\d+\.?\d*)/)?.[1] || 0);
-    const waterSaved = parseFloat(resultData.eco_impact?.water?.match(/(\d+\.?\d*)/)?.[1] || 0);
-
-    if (userEntry) {
-        userEntry.itemsRecycled = (userEntry.itemsRecycled || 0) + 1;
-        userEntry.totalCO2Saved = (userEntry.totalCO2Saved || 0) + co2Saved;
-        userEntry.totalEnergySaved = (userEntry.totalEnergySaved || 0) + energySaved;
-        userEntry.totalWaterSaved = (userEntry.totalWaterSaved || 0) + waterSaved;
-    } else {
-        userEntry = {
-            name: userName,
-            itemsRecycled: 1,
-            totalCO2Saved: co2Saved,
-            totalEnergySaved: energySaved,
-            totalWaterSaved: waterSaved,
-        };
-        leaderboard.push(userEntry);
-    }
-
-    // Sort leaderboard by itemsRecycled (descending)
-    leaderboard.sort((a, b) => b.itemsRecycled - a.itemsRecycled);
-    saveLeaderboard(leaderboard);
-    console.log('Leaderboard updated:', leaderboard);
-}
-
-// NEW: Fungsi untuk merender leaderboard
 function renderLeaderboard(leaderboardData) {
     const leaderboardList = document.getElementById('leaderboard-list');
-    const t = translations[currentLang]; // Assuming currentLang is available or passed
+    
+    if (!leaderboardList) return; // Exit if element doesn't exist on this page
 
     if (leaderboardData.length === 0) {
         leaderboardList.innerHTML = `
@@ -373,27 +326,37 @@ function renderLeaderboard(leaderboardData) {
                 <div class="no-history-icon">
                     <i class="fas fa-trophy"></i>
                 </div>
-                <p>${t.no_leaderboard_data}</p>
+                <p>Belum ada data di papan peringkat.</p>
             </div>
         `;
         return;
     }
 
     let leaderboardHTML = `
-        <div class="leaderboard-header">
-            <div>${t.leaderboard_rank}</div>
-            <div>${t.leaderboard_name}</div>
-            <div>${t.leaderboard_items}</div>
-            <div>${t.leaderboard_co2}</div>
-            <div>${t.leaderboard_energy}</div>
-            <div>${t.leaderboard_water}</div>
+        <div class="leaderboard-header-row">
+            <div>Rank</div>
+            <div>Nama</div>
+            <div>Items</div>
+            <div>CO₂ Saved</div>
+            <div>Energy</div>
+            <div>Water</div>
         </div>
     `;
 
-    leaderboardData.forEach((entry, index) => {
+    // Show only top 5 in report page
+    const topUsers = leaderboardData.slice(0, 5);
+    
+    topUsers.forEach((entry, index) => {
+        const rank = index + 1;
+        let rankIcon = '';
+        
+        if (rank === 1) rankIcon = '<i class="fas fa-trophy trophy-icon"></i>';
+        else if (rank === 2) rankIcon = '<i class="fas fa-medal trophy-icon" style="color: #C0C0C0;"></i>';
+        else if (rank === 3) rankIcon = '<i class="fas fa-medal trophy-icon" style="color: #CD7F32;"></i>';
+
         leaderboardHTML += `
             <div class="leaderboard-item">
-                <div class="leaderboard-rank">${index + 1}</div>
+                <div class="leaderboard-rank">${rankIcon} ${rank}</div>
                 <div class="leaderboard-name">${entry.name}</div>
                 <div class="leaderboard-value">${entry.itemsRecycled}</div>
                 <div class="leaderboard-value">${entry.totalCO2Saved}g</div>
@@ -403,15 +366,26 @@ function renderLeaderboard(leaderboardData) {
         `;
     });
 
+    if (leaderboardData.length > 5) {
+        leaderboardHTML += `
+            <div style="text-align: center; padding: 1rem;">
+                <a href="leaderboard.html" class="view-report-btn">
+                    <i class="fas fa-trophy"></i>
+                    Lihat Semua Peringkat
+                </a>
+            </div>
+        `;
+    }
+
     leaderboardList.innerHTML = leaderboardHTML;
 }
 
-// NEW: Fungsi utama untuk menginisialisasi halaman laporan
 function initializeReportPage() {
     const historyData = loadHistory();
     const stats = calculateStatistics(historyData);
     const leaderboardData = loadLeaderboard(); // Load leaderboard data
 
+    updateNavbarUI();
     renderSummaryDashboard(stats);
     renderHistoryList(historyData);
     renderLeaderboard(leaderboardData); // Render leaderboard

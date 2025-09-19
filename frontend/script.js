@@ -79,35 +79,23 @@ const translations = {
     }
 };
 
-// Global functions untuk localStorage
-function saveToHistory(resultData) {
-    try {
-        let history = JSON.parse(localStorage.getItem('dauramaHistory')) || [];
-
-        // Tambahkan timestamp jika belum ada
-        if (!resultData.timestamp) {
-            resultData.timestamp = new Date().toISOString();
-        }
-
-        // Tambahkan ID unik
-        resultData.id = Date.now() + Math.random();
-
-        history.push(resultData);
-        localStorage.setItem('dauramaHistory', JSON.stringify(history));
-
-        console.log('Data saved to history:', resultData);
-    } catch (error) {
-        console.error('Error saving to localStorage:', error);
-    }
-}
-
-function loadHistory() {
-    try {
-        return JSON.parse(localStorage.getItem('dauramaHistory')) || [];
-    } catch (error) {
-        console.error('Error loading from localStorage:', error);
-        return [];
-    }
+// Show level up notification
+function showLevelUpNotification() {
+    const user = loadUserData(); 
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #FFD700, #FFC107); color: white;
+        padding: 2rem; border-radius: 15px; text-align: center; z-index: 3000;
+        box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3); animation: levelUpPulse 0.5s ease-in-out;
+    `;
+    notification.innerHTML = `
+        <i class="fas fa-star" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+        <h3>Level Up!</h3>
+        <p>You've reached Level ${user.level}!</p>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => { notification.remove(); }, 3000);
 }
 
 function loadTranslations(lang) {
@@ -167,10 +155,9 @@ document.getElementById('lang-id').addEventListener('click', () => loadTranslati
 
 // Image upload functionality
 const imageUpload = document.getElementById('imageUpload');
+const previewContainer = document.querySelector('.preview-container'); 
 const preview = document.getElementById('preview');
 const analyzeBtn = document.getElementById('analyzeBtn');
-const objectNameDisplay = document.getElementById('objectNameDisplay');
-const instructionsDisplay = document.getElementById('instructionsDisplay');
 
 imageUpload.addEventListener('change', function (e) {
     const file = e.target.files[0];
@@ -178,7 +165,7 @@ imageUpload.addEventListener('change', function (e) {
         const reader = new FileReader();
         reader.onload = function (e) {
             preview.src = e.target.result;
-            preview.style.display = 'block';
+            previewContainer.style.display = 'flex'; 
             analyzeBtn.style.display = 'block';
         };
         reader.readAsDataURL(file);
@@ -318,38 +305,26 @@ analyzeBtn.addEventListener('click', async function () {
 function startGame(itemType, resultData) {
     const gameSection = document.getElementById('minigame-wrapper');
     const itemContainer = document.getElementById('item-container');
-
     gameSection.style.display = 'block';
 
-    // Create draggable item
     const item = document.createElement('div');
     item.className = 'draggable-item';
     item.draggable = true;
     item.textContent = getItemIcon(itemType);
     item.dataset.type = itemType;
-
-    // Store complete result data in dataset
     item.dataset.result = JSON.stringify(resultData);
 
-    // Clear previous items
     itemContainer.innerHTML = '';
     itemContainer.appendChild(item);
 
-    // Add drag event listeners
-    item.addEventListener('dragstart', handleDragStart);
-    item.addEventListener('dragend', handleDragEnd);
-
-    // Add drop zone listeners
-    const dropZones = document.querySelectorAll('.drop-zone');
-    dropZones.forEach(zone => {
-        zone.addEventListener('dragover', handleDragOver);
-        zone.addEventListener('drop', handleDrop);
-        zone.addEventListener('dragenter', handleDragEnter);
-        zone.addEventListener('dragleave', handleDragLeave);
+    item.addEventListener('dragstart', (e) => {
+        draggedItem = e.target;
+        e.target.style.opacity = '0.5';
     });
-
-    // Scroll to game
-    gameSection.scrollIntoView({ behavior: 'smooth' });
+    item.addEventListener('dragend', (e) => {
+        e.target.style.opacity = '1';
+        draggedItem = null;
+    });
 }
 
 function getItemIcon(type) {
@@ -387,115 +362,59 @@ function handleDragLeave(e) {
 
 function handleDrop(e) {
     e.preventDefault();
-    this.classList.remove('drag-over');
+    const dropZone = this;
+    dropZone.classList.remove('drag-over');
 
     if (draggedItem) {
         const itemType = draggedItem.dataset.type;
-        const zoneType = this.id.replace('-zone', '');
+        const zoneType = dropZone.id.replace('-zone', '');
 
         if (itemType === zoneType) {
-            // Correct drop
-            try {
-                const resultData = JSON.parse(draggedItem.dataset.result);
-                // saveToHistory(resultData); // Moved to after name input
-                console.log('Item correctly sorted. Prompting for name...');
-                
-                showSuccessPopup(); // Show success message first
-                
-                // Hide draggable item
-                draggedItem.style.transform = 'scale(0)';
-                setTimeout(() => {
-                    document.getElementById('item-container').innerHTML = '<div style="color: #4CAF50; font-size: 2rem;"><i class="fas fa-check-circle"></i> Correct!</div>';
-                    showNameInputPopup(resultData); // Show name input after success popup
-                }, 1000); // Delay to allow success popup to be seen
-                
-            } catch (error) {
-                console.error('Error parsing result data:', error);
-            }
+            const resultData = JSON.parse(draggedItem.dataset.result);
+            processSuccessfulSort(resultData); 
+            draggedItem.remove();
         } else {
-            // Incorrect drop
-            draggedItem.style.animation = 'shake 0.5s ease-in-out';
+            // JIKA SALAH: Tampilkan feedback visual tanpa alert
+            dropZone.classList.add('drop-incorrect');
             setTimeout(() => {
-                draggedItem.style.animation = '';
-            }, 500);
-            alert(translations[currentLang].incorrect_sort_message); // NEW: Add incorrect message
+                dropZone.classList.remove('drop-incorrect');
+            }, 600);
         }
     }
 }
 
-// NEW: Function to show name input popup
+function processSuccessfulSort(resultData) {
+    const user = loadUserData();
+    if (user.name && user.name !== 'Anonymous') {
+        saveDataAndAddExp(user.name, resultData);
+        showSuccessPopup();
+    } else {
+        showNameInputPopup(resultData);
+    }
+}
+
 function showNameInputPopup(resultData) {
     const nameInputPopup = document.getElementById('name-input-popup');
     const userNameInput = document.getElementById('userNameInput');
     const submitNameBtn = document.getElementById('submitNameBtn');
-    const closeNamePopupBtn = document.getElementById('closeNamePopup');
-    const t = translations[currentLang];
-
-    document.getElementById('enterNameTitle').textContent = t.congratulations_title; // Use congratulations title
-    document.getElementById('enterNamePrompt').textContent = t.enter_name_prompt;
-    submitNameBtn.textContent = t.submit_name;
-
-    userNameInput.value = localStorage.getItem('dauramaUserName') || ''; // Pre-fill if name exists
     nameInputPopup.style.display = 'flex';
 
-    const handleSubmit = () => {
-        let userName = userNameInput.value.trim();
-        if (userName === '') {
-            userName = 'Anonim'; // Default name if empty
-        }
-        localStorage.setItem('dauramaUserName', userName); // Save name for future use
-
-        // Save to history and update leaderboard
-        saveToHistory({ ...resultData, userName: userName }); // Save with userName
-        updateLeaderboard(userName, resultData); // Update leaderboard
-
+    // Menggunakan { once: true } untuk mencegah listener ganda
+    submitNameBtn.addEventListener('click', function handleSubmit() {
+        let userName = userNameInput.value.trim() || 'Anonymous';
+        const user = loadUserData();
+        user.name = userName;
+        saveUserData(user);
+        saveDataAndAddExp(userName, resultData);
         nameInputPopup.style.display = 'none';
-        submitNameBtn.removeEventListener('click', handleSubmit); // Remove listener to prevent multiple calls
-        closeNamePopupBtn.removeEventListener('click', handleClose);
-    };
-
-    const handleClose = () => {
-        nameInputPopup.style.display = 'none';
-        submitNameBtn.removeEventListener('click', handleSubmit);
-        closeNamePopupBtn.removeEventListener('click', handleClose);
-        // If user closes without submitting, still save to history as Anonim
-        if (!localStorage.getItem('dauramaUserName')) {
-            saveToHistory({ ...resultData, userName: 'Anonim' });
-            updateLeaderboard('Anonim', resultData);
-        }
-    };
-
-    submitNameBtn.addEventListener('click', handleSubmit);
-    closeNamePopupBtn.addEventListener('click', handleClose);
+        showSuccessPopup();
+    }, { once: true });
 }
 
-// NEW: Add updateLeaderboard function to script.js (for consistency, though report.js also has it)
-function updateLeaderboard(userName, resultData) {
-    let leaderboard = JSON.parse(localStorage.getItem('dauramaLeaderboard')) || [];
-    let userEntry = leaderboard.find(entry => entry.name === userName);
-
-    const co2Saved = parseInt(resultData.eco_impact?.co2?.match(/(\d+)/)?.[1] || 0);
-    const energySaved = parseFloat(resultData.eco_impact?.energy?.match(/(\d+\.?\d*)/)?.[1] || 0);
-    const waterSaved = parseFloat(resultData.eco_impact?.water?.match(/(\d+\.?\d*)/)?.[1] || 0);
-
-    if (userEntry) {
-        userEntry.itemsRecycled = (userEntry.itemsRecycled || 0) + 1;
-        userEntry.totalCO2Saved = (userEntry.totalCO2Saved || 0) + co2Saved;
-        userEntry.totalEnergySaved = (userEntry.totalEnergySaved || 0) + energySaved;
-        userEntry.totalWaterSaved = (userEntry.totalWaterSaved || 0) + waterSaved;
-    } else {
-        userEntry = {
-            name: userName,
-            itemsRecycled: 1,
-            totalCO2Saved: co2Saved,
-            totalEnergySaved: energySaved,
-            totalWaterSaved: waterSaved,
-        };
-        leaderboard.push(userEntry);
-    }
-
-    leaderboard.sort((a, b) => b.itemsRecycled - a.itemsRecycled);
-    localStorage.setItem('dauramaLeaderboard', JSON.stringify(leaderboard));
+function saveDataAndAddExp(userName, resultData) {
+    saveToHistory(resultData);
+    updateLeaderboard(userName, resultData);
+    addExp(EXP_PER_ITEM);
 }
 
 function showSuccessPopup() {
@@ -550,9 +469,29 @@ const style = document.createElement('style');
 style.textContent = shakeKeyframes;
 document.head.appendChild(style);
 
-// Initialize page
 document.addEventListener('DOMContentLoaded', function () {
-    loadTranslations(currentLang); // This will now also update the new popup texts
+    loadTranslations(currentLang); 
+    updateNavbarUI();
+
+    const levelUpStyles = `
+        @keyframes levelUpPulse {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+    `;
+
+    const dropZones = document.querySelectorAll('.drop-zone');
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => e.preventDefault());
+        zone.addEventListener('drop', handleDrop);
+        zone.addEventListener('dragenter', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    });
+
+    const style = document.createElement('style');
+    style.textContent = levelUpStyles;
+    document.head.appendChild(style);
     
     const viewReportBtn = document.getElementById('viewReportBtn');
     if (viewReportBtn) {
