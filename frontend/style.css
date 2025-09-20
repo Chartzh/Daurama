@@ -952,6 +952,10 @@ body {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
+.profile-title i {
+    animation: bounce 2s infinite;
+}
+
 .profile-subtitle {
     font-size: 1.3rem;
     color: rgba(255, 255, 255, 0.9);
@@ -1040,6 +1044,407 @@ body {
 .stat-item i {
     font-size: 1.2rem;
     color: #4CAF50;
+}
+
+/* TAMBAHKAN CSS INI KE style.css UNTUK PET STATS OVERVIEW */
+
+/* Pet Level Distribution Stats */
+.pet-stats-overview {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.pet-stats-overview h3 {
+    font-size: 1.8rem;
+    color: #2d5a3d;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.level-distribution {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.level-stat {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.level-stat:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(76, 175, 80, 0.2);
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.level-stat.most-popular {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+    border-color: #FFD700;
+    transform: scale(1.05);
+}
+
+.level-stat.most-popular::after {
+    content: "🌟 Popular";
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #FFD700;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.level-stat {
+    position: relative;
+}
+
+.level-stat img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #4CAF50;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.level-stat:hover img {
+    transform: scale(1.1);
+    border-color: #45a049;
+}
+
+.level-stat.most-popular img {
+    border-color: #FFD700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.level-range {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d5a3d;
+}
+
+.user-count {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.level-stat.most-popular .level-range {
+    color: #B8860B;
+}
+
+.level-stat.most-popular .user-count {
+    color: #B8860B;
+    font-weight: 600;
+}
+
+/* Enhanced Leaderboard Item Classes */
+.leaderboard-item.rank-1 {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+    border-left: 5px solid #FFD700;
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+}
+
+.leaderboard-item.rank-2 {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.15), rgba(192, 192, 192, 0.05));
+    border-left: 5px solid #C0C0C0;
+    transform: scale(1.01);
+    box-shadow: 0 6px 20px rgba(192, 192, 192, 0.2);
+}
+
+.leaderboard-item.rank-3 {
+    background: linear-gradient(135deg, rgba(205, 127, 50, 0.15), rgba(205, 127, 50, 0.05));
+    border-left: 5px solid #CD7F32;
+    box-shadow: 0 4px 15px rgba(205, 127, 50, 0.2);
+}
+
+/* Special animations for top ranks */
+.leaderboard-item.rank-1 .leaderboard-pet-image {
+    animation: goldGlow 2s infinite alternate;
+}
+
+.leaderboard-item.rank-2 .leaderboard-pet-image {
+    animation: silverGlow 2s infinite alternate;
+}
+
+.leaderboard-item.rank-3 .leaderboard-pet-image {
+    animation: bronzeGlow 2s infinite alternate;
+}
+
+@keyframes goldGlow {
+    from {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    to {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+}
+
+@keyframes silverGlow {
+    from {
+        box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    }
+    to {
+        box-shadow: 0 0 20px rgba(192, 192, 192, 0.8);
+    }
+}
+
+@keyframes bronzeGlow {
+    from {
+        box-shadow: 0 0 10px rgba(205, 127, 50, 0.5);
+    }
+    to {
+        box-shadow: 0 0 20px rgba(205, 127, 50, 0.8);
+    }
+}
+
+/* User title special styling */
+.user-title {
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
+    transition: all 0.3s ease;
+}
+
+.leaderboard-item.rank-1 .user-title {
+    color: #B8860B;
+    font-weight: 600;
+}
+
+.leaderboard-item.rank-2 .user-title {
+    color: #708090;
+    font-weight: 600;
+}
+
+.leaderboard-item.rank-3 .user-title {
+    color: #8B4513;
+    font-weight: 600;
+}
+
+/* Enhanced hover effects for all items */
+.leaderboard-item:hover {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
+    transform: translateX(10px);
+    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.15);
+}
+
+.leaderboard-item.rank-1:hover {
+    transform: scale(1.02) translateX(10px);
+}
+
+.leaderboard-item.rank-2:hover {
+    transform: scale(1.01) translateX(10px);
+}
+
+.leaderboard-item.rank-3:hover {
+    transform: translateX(10px);
+}
+
+/* Loading animation for pet images */
+.leaderboard-pet-image[src=""] {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Mobile responsiveness for pet stats */
+@media (max-width: 768px) {
+    .pet-stats-overview {
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .pet-stats-overview h3 {
+        font-size: 1.5rem;
+    }
+    
+    .level-distribution {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .level-stat {
+        padding: 1rem;
+    }
+    
+    .level-stat img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .level-range {
+        font-size: 0.9rem;
+    }
+    
+    .user-count {
+        font-size: 0.8rem;
+    }
+    
+    .leaderboard-item.rank-1,
+    .leaderboard-item.rank-2,
+    .leaderboard-item.rank-3 {
+        transform: none;
+    }
+    
+    .leaderboard-item:hover {
+        transform: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .level-distribution {
+        grid-template-columns: 1fr;
+    }
+    
+    .pet-stats-overview h3 {
+        font-size: 1.3rem;
+    }
+    
+    .level-stat {
+        padding: 0.8rem;
+        gap: 0.5rem;
+    }
+    
+    .level-stat img {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Additional visual enhancements */
+.leaderboard-list {
+    position: relative;
+}
+
+.leaderboard-list::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #4CAF50, transparent);
+    border-radius: 1px;
+}
+
+.leaderboard-list::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #4CAF50, transparent);
+    border-radius: 1px;
+}
+
+/* TAMBAHKAN CSS INI KE style.css UNTUK REPORT PAGE PET INTEGRATION */
+
+/* Mini leaderboard pet images in report page */
+.leaderboard-pet-image-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #4CAF50;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.leaderboard-pet-image-small:hover {
+    transform: scale(1.1);
+    border-color: #45a049;
+}
+
+/* Mini level badge for report page */
+.level-badge-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
+}
+
+.level-badge-mini i {
+    font-size: 0.7rem;
+}
+
+/* Report page leaderboard adjustments */
+.report-container .leaderboard-header-row {
+    grid-template-columns: 0.6fr 2.2fr 0.8fr 1fr 1fr 1fr; /* Adjusted for report page */
+}
+
+.report-container .leaderboard-item {
+    grid-template-columns: 0.6fr 2.2fr 0.8fr 1fr 1fr 1fr; /* Adjusted for report page */
+}
+
+.report-container .leaderboard-user-info {
+    gap: 0.8rem;
+}
+
+.report-container .user-name {
+    font-size: 1rem;
+}
+
+.report-container .user-title {
+    font-size: 0.75rem;
+}
+
+/* Responsive adjustments for report page leaderboard */
+@media (max-width: 768px) {
+    .report-container .leaderboard-header-row,
+    .report-container .leaderboard-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .report-container .leaderboard-user-info {
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .leaderboard-pet-image-small {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .level-badge-mini {
+        justify-self: center;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
 }
 
 .exp-progress-container {
@@ -1761,7 +2166,6 @@ body {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
-/* Leaderboard Section - Redesigned */
 .leaderboard-section {
     padding: 6rem 0;
     background: linear-gradient(135deg, #f8f9fa, #e8f5e8);
@@ -1794,7 +2198,6 @@ body {
     font-weight: 300;
 }
 
-/* Leaderboard List - Complete Redesign */
 .leaderboard-list {
     background: white;
     border-radius: 20px;
@@ -1828,25 +2231,325 @@ body {
     position: relative;
 }
 
-/* Special styling for top 3 positions */
-.leaderboard-item:nth-child(2) {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
-    border-left: 5px solid #FFD700;
+.leaderboard-header-row {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1.5rem 2rem;
+    display: grid;
+    grid-template-columns: 0.8fr 2.8fr 1fr 1.2fr 1.2fr 1.2fr 1.2fr; /* Updated grid */
+    gap: 1rem;
+    align-items: center;
+}
+
+.leaderboard-item {
+    display: grid;
+    grid-template-columns: 0.8fr 2.8fr 1fr 1.2fr 1.2fr 1.2fr 1.2fr; /* Updated grid */
+    gap: 1rem;
+    padding: 1.8rem 2rem;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* User Info Section with Pet Preview */
+.leaderboard-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-pet-preview {
+    position: relative;
+}
+
+.leaderboard-pet-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid #4CAF50;
+    object-fit: cover;
+    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3);
+    transition: all 0.3s ease;
+}
+
+.leaderboard-item:hover .leaderboard-pet-image {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.5);
+}
+
+.user-name-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.user-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2d5a3d;
+}
+
+.user-title {
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* Level Badge for Leaderboard */
+.leaderboard-level {
+    display: flex;
+    justify-content: center;
+}
+
+.level-badge-small {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: linear-gradient(135deg, #FFD700, #FFC107);
+    color: white;
+    padding: 0.5rem 0.8rem;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    box-shadow: 0 3px 10px rgba(255, 215, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.level-badge-small i {
+    font-size: 0.8rem;
+}
+
+.leaderboard-item:hover .level-badge-small {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.5);
+}
+
+.leaderboard-item:nth-child(2) .level-badge-small {
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+}
+
+.leaderboard-item:nth-child(3) .level-badge-small {
+    background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+}
+
+.leaderboard-item:nth-child(4) .level-badge-small {
+    background: linear-gradient(135deg, #CD7F32, #B8860B);
+}
+
+.leaderboard-item:nth-child(2) .user-pet-preview::after,
+.leaderboard-item:nth-child(3) .user-pet-preview::after,
+.leaderboard-item:nth-child(4) .user-pet-preview::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #FFD700, #FF8C00, #FFD700);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.leaderboard-item:nth-child(2):hover .user-pet-preview::after {
+    opacity: 1;
+}
+
+.leaderboard-item:nth-child(3) .user-pet-preview::after {
+    background: conic-gradient(from 0deg, #C0C0C0, #A0A0A0, #C0C0C0);
+}
+
+.leaderboard-item:nth-child(3):hover .user-pet-preview::after {
+    opacity: 1;
+}
+
+.leaderboard-item:nth-child(4) .user-pet-preview::after {
+    background: conic-gradient(from 0deg, #CD7F32, #B8860B, #CD7F32);
+}
+
+.leaderboard-item:nth-child(4):hover .user-pet-preview::after {
+    opacity: 1;
+}
+
+.trophy-icon {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.leaderboard-value {
+    color: #555;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    padding: 0.6rem 0.8rem;
+    background: rgba(76, 175, 80, 0.05);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.leaderboard-value:hover {
+    background: rgba(76, 175, 80, 0.1);
     transform: scale(1.02);
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+    border-color: rgba(76, 175, 80, 0.2);
+}
+
+.leaderboard-item:nth-child(2) .leaderboard-value {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: rgba(255, 215, 0, 0.2);
+}
+
+.leaderboard-item:nth-child(3) .leaderboard-value {
+    background: rgba(192, 192, 192, 0.1);
+    border-color: rgba(192, 192, 192, 0.2);
+}
+
+.leaderboard-item:nth-child(4) .leaderboard-value {
+    background: rgba(205, 127, 50, 0.1);
+    border-color: rgba(205, 127, 50, 0.2);
+}
+
+@media (max-width: 968px) {
+    .leaderboard-header-row,
+    .leaderboard-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 0.8rem;
+        padding: 1.5rem;
+    }
+    
+    .leaderboard-user-info {
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .leaderboard-pet-image {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .user-name-info {
+        text-align: center;
+    }
+    
+    .level-badge-small {
+        justify-self: center;
+    }
+    
+    .leaderboard-header-row div,
+    .leaderboard-item > div {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .leaderboard-header-row div:last-child,
+    .leaderboard-item > div:last-child {
+        border-bottom: none;
+    }
+    
+    .leaderboard-item {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .leaderboard-rank {
+        order: 1;
+        font-size: 1.2rem;
+    }
+    
+    .leaderboard-user-info {
+        order: 2;
+    }
+    
+    .leaderboard-level {
+        order: 3;
+    }
+    
+    .leaderboard-value {
+        margin: 0.2rem 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .leaderboard-container {
+        padding: 1rem;
+    }
+    
+    .leaderboard-header-row,
+    .leaderboard-item {
+        padding: 1rem;
+    }
+    
+    .leaderboard-pet-image {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .user-name {
+        font-size: 1.1rem;
+    }
+    
+    .user-title {
+        font-size: 0.75rem;
+    }
+    
+    .level-badge-small {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+}
+
+@keyframes leaderboardEntrance {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.leaderboard-item {
+    animation: leaderboardEntrance 0.5s ease-out;
+}
+
+.leaderboard-item:nth-child(2) {
+    animation-delay: 0.1s;
 }
 
 .leaderboard-item:nth-child(3) {
-    background: linear-gradient(135deg, rgba(192, 192, 192, 0.15), rgba(192, 192, 192, 0.05));
-    border-left: 5px solid #C0C0C0;
-    transform: scale(1.01);
-    box-shadow: 0 6px 20px rgba(192, 192, 192, 0.2);
+    animation-delay: 0.2s;
 }
 
 .leaderboard-item:nth-child(4) {
-    background: linear-gradient(135deg, rgba(205, 127, 50, 0.15), rgba(205, 127, 50, 0.05));
-    border-left: 5px solid #CD7F32;
-    box-shadow: 0 4px 15px rgba(205, 127, 50, 0.2);
+    animation-delay: 0.3s;
+}
+
+.leaderboard-item:nth-child(n+5) {
+    animation-delay: 0.4s;
+}
+
+/* Pet image loading state */
+.leaderboard-pet-image {
+    background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
+                linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
+                linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+    background-size: 8px 8px;
+    background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+}
+
+.leaderboard-pet-image[src] {
+    background: none;
 }
 
 .leaderboard-item:hover {

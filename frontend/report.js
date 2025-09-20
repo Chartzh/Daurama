@@ -274,7 +274,6 @@ function exportData() {
         ].join(','))
     ].join('\n');
 
-    // Download file
     const blob = new Blob([csvData], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -291,24 +290,22 @@ function initializeReportPage() {
     const stats = calculateStatistics(historyData);
     const leaderboardData = loadLeaderboard();
 
+    updateNavbarUI();
     renderSummaryDashboard(stats);
     renderHistoryList(historyData);
-    renderLeaderboard(leaderboardData);
-
+    renderLeaderboard(leaderboardData); 
+    
     if (typeof updatePetPreview === 'function') {
         updatePetPreview();
     }
-
-    // Event listeners
-    const clearBtn = document.getElementById('clearHistoryBtn');
-    const exportBtn = document.getElementById('exportBtn');
+    
     const petPreview = document.getElementById('pet-preview');
     if (petPreview && typeof showPetCard === 'function') {
         petPreview.addEventListener('click', showPetCard);
     }
-    
-    if (clearBtn) clearBtn.addEventListener('click', clearHistory);
-    if (exportBtn) exportBtn.addEventListener('click', exportData);
+
+    document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
+    document.getElementById('exportBtn').addEventListener('click', exportData);
 }
 
 document.addEventListener('DOMContentLoaded', initializeReportPage);
@@ -326,7 +323,7 @@ window.lastHistoryData = JSON.stringify(loadHistory());
 function renderLeaderboard(leaderboardData) {
     const leaderboardList = document.getElementById('leaderboard-list');
     
-    if (!leaderboardList) return; // Exit if element doesn't exist on this page
+    if (!leaderboardList) return; 
 
     if (leaderboardData.length === 0) {
         leaderboardList.innerHTML = `
@@ -340,36 +337,84 @@ function renderLeaderboard(leaderboardData) {
         return;
     }
 
+    const enhancedData = leaderboardData.map(entry => {
+        const totalExp = entry.itemsRecycled * 25;
+        const level = Math.floor(totalExp / 100) + 1;
+        
+        let petImage;
+        if (level <= 2) {
+            petImage = 'source/pets/cat-level-1.png';
+        } else if (level <= 4) {
+            petImage = 'source/pets/cat-level-3.png';
+        } else if (level <= 6) {
+            petImage = 'source/pets/cat-level-5.png';
+        } else {
+            petImage = 'source/pets/cat-level-7.png';
+        }
+        
+        return {
+            ...entry,
+            level: level,
+            totalExp: totalExp,
+            petImage: petImage
+        };
+    });
+
     let leaderboardHTML = `
         <div class="leaderboard-header-row">
             <div>Rank</div>
-            <div>Nama</div>
+            <div>Pet & Nama</div>
+            <div>Level</div>
             <div>Items</div>
-            <div>CO₂ Saved</div>
+            <div>COâ‚‚ Saved</div>
             <div>Energy</div>
-            <div>Water</div>
         </div>
     `;
 
-    // Show only top 5 in report page
-    const topUsers = leaderboardData.slice(0, 5);
+    const topUsers = enhancedData.slice(0, 5);
     
     topUsers.forEach((entry, index) => {
         const rank = index + 1;
         let rankIcon = '';
+        let userTitle = 'Eco Warrior';
         
-        if (rank === 1) rankIcon = '<i class="fas fa-trophy trophy-icon"></i>';
-        else if (rank === 2) rankIcon = '<i class="fas fa-medal trophy-icon" style="color: #C0C0C0;"></i>';
-        else if (rank === 3) rankIcon = '<i class="fas fa-medal trophy-icon" style="color: #CD7F32;"></i>';
+        if (rank === 1) {
+            rankIcon = '<i class="fas fa-trophy trophy-icon" style="color: #FFD700;"></i>';
+        } else if (rank === 2) {
+            rankIcon = '<i class="fas fa-medal trophy-icon" style="color: #C0C0C0;"></i>';
+        } else if (rank === 3) {
+            rankIcon = '<i class="fas fa-medal trophy-icon" style="color: #CD7F32;"></i>';
+        }
+
+        if (entry.level >= 7) {
+            userTitle = 'Eco Master';
+        } else if (entry.level >= 5) {
+            userTitle = 'Eco Champion';
+        } else if (entry.level >= 3) {
+            userTitle = 'Eco Enthusiast';
+        }
 
         leaderboardHTML += `
             <div class="leaderboard-item">
                 <div class="leaderboard-rank">${rankIcon} ${rank}</div>
-                <div class="leaderboard-name">${entry.name}</div>
+                <div class="leaderboard-user-info">
+                    <div class="user-pet-preview">
+                        <img src="${entry.petImage}" alt="Pet Level ${entry.level}" class="leaderboard-pet-image-small">
+                    </div>
+                    <div class="user-name-info">
+                        <span class="user-name">${entry.name}</span>
+                        <span class="user-title">${userTitle}</span>
+                    </div>
+                </div>
+                <div class="leaderboard-level">
+                    <div class="level-badge-mini">
+                        <i class="fas fa-star"></i>
+                        <span>${entry.level}</span>
+                    </div>
+                </div>
                 <div class="leaderboard-value">${entry.itemsRecycled}</div>
                 <div class="leaderboard-value">${entry.totalCO2Saved}g</div>
                 <div class="leaderboard-value">${entry.totalEnergySaved.toFixed(1)} jam</div>
-                <div class="leaderboard-value">${entry.totalWaterSaved.toFixed(1)}L</div>
             </div>
         `;
     });
@@ -391,19 +436,16 @@ function renderLeaderboard(leaderboardData) {
 function initializeReportPage() {
     const historyData = loadHistory();
     const stats = calculateStatistics(historyData);
-    const leaderboardData = loadLeaderboard(); // Load leaderboard data
-
+    const leaderboardData = loadLeaderboard(); 
     updateNavbarUI();
     renderSummaryDashboard(stats);
     renderHistoryList(historyData);
-    renderLeaderboard(leaderboardData); // Render leaderboard
+    renderLeaderboard(leaderboardData); 
 
-    // Event listeners
     document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
     document.getElementById('exportBtn').addEventListener('click', exportData);
 
-    // NEW: Update leaderboard and section titles with translations
-    const t = translations[currentLang]; // Assuming currentLang is available
+    const t = translations[currentLang]; 
     document.getElementById('leaderboardTitle').textContent = t.leaderboard_title;
     document.getElementById('leaderboardSubtitle').textContent = t.leaderboard_subtitle;
 }

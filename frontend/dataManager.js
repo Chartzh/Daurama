@@ -132,18 +132,30 @@ function updateLeaderboard(userName, resultData) {
         userEntry.totalCO2Saved = (userEntry.totalCO2Saved || 0) + co2Saved;
         userEntry.totalEnergySaved = (userEntry.totalEnergySaved || 0) + energySaved;
         userEntry.totalWaterSaved = (userEntry.totalWaterSaved || 0) + waterSaved;
+        
+        userEntry.totalExp = userEntry.itemsRecycled * 25;
+        userEntry.level = Math.floor(userEntry.totalExp / 100) + 1;
     } else {
+        const totalExp = 25; 
         userEntry = {
             name: userName,
             itemsRecycled: 1,
             totalCO2Saved: co2Saved,
             totalEnergySaved: energySaved,
             totalWaterSaved: waterSaved,
+            totalExp: totalExp,
+            level: Math.floor(totalExp / 100) + 1,
         };
         leaderboard.push(userEntry);
     }
 
-    leaderboard.sort((a, b) => b.itemsRecycled - a.itemsRecycled);
+    leaderboard.sort((a, b) => {
+        if (b.itemsRecycled === a.itemsRecycled) {
+            return (b.level || 1) - (a.level || 1);
+        }
+        return b.itemsRecycled - a.itemsRecycled;
+    });
+    
     localStorage.setItem(KEY_LEADERBOARD, JSON.stringify(leaderboard));
 }
 

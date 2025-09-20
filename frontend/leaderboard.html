@@ -64,26 +64,70 @@
     <section class="leaderboard-section">
         <div class="leaderboard-container">
             <div class="leaderboard-header">
-                <h2 class="leaderboard-title">Top Recyclers</h2>
-                <p class="leaderboard-subtitle">Para pejuang lingkungan terdepan</p>
+                <h2 class="leaderboard-title">Top Leaderboard</h2>
+                <p class="leaderboard-subtitle">Para pejuang lingkungan terdepan beserta pet companion mereka</p>
+            </div>
+            
+            <div class="pet-stats-overview">
+                <h3>Pet Level Distribution</h3>
+                <div class="level-distribution">
+                    <div class="level-stat">
+                        <img src="source/pets/cat-level-1.png" alt="Level 1-2">
+                        <span class="level-range">Level 1-2</span>
+                        <span class="user-count" id="level-1-2-count">0 Users</span>
+                    </div>
+                    <div class="level-stat">
+                        <img src="source/pets/cat-level-3.png" alt="Level 3-4">
+                        <span class="level-range">Level 3-4</span>
+                        <span class="user-count" id="level-3-4-count">0 Users</span>
+                    </div>
+                    <div class="level-stat">
+                        <img src="source/pets/cat-level-5.png" alt="Level 5-6">
+                        <span class="level-range">Level 5-6</span>
+                        <span class="user-count" id="level-5-6-count">0 Users</span>
+                    </div>
+                    <div class="level-stat">
+                        <img src="source/pets/cat-level-7.png" alt="Level 7+">
+                        <span class="level-range">Level 7+</span>
+                        <span class="user-count" id="level-7-plus-count">0 Users</span>
+                    </div>
+                </div>
             </div>
             
             <div id="leaderboard-list" class="leaderboard-list">
-                <div class="leaderboard-header-row">
-                    <div>Rank</div>
-                    <div>Nama</div>
-                    <div>Items</div>
-                    <div>CO₂ Saved</div>
-                    <div>Energy</div>
-                    <div>Water</div>
-                </div>
-                <!-- Leaderboard items will be filled by JavaScript -->
+                <!-- Leaderboard items akan diisi oleh JavaScript -->
             </div>
         </div>
     </section>
 
+    <div id="pet-card-overlay" class="pet-card-overlay" onclick="hidePetCard()">
+        <div class="pet-card" onclick="event.stopPropagation()">
+            <div class="pet-card-header">
+                <h3 id="card-pet-name">Nura</h3>
+                <button class="close-pet-card" onclick="hidePetCard()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="pet-card-body">
+                <div class="pet-card-image">
+                    <img id="card-pet-image" src="source/pets/cat-level-1.png" alt="Pet">
+                </div>
+                <div class="pet-card-info">
+                    <p><strong>Level:</strong> <span id="card-pet-level">1</span></p>
+                    <p><strong>EXP:</strong> <span id="card-pet-exp">0</span>/100</p>
+                    <div class="card-exp-bar">
+                        <div id="card-exp-progress" class="card-exp-fill"></div>
+                    </div>
+                </div>
+                <div class="pet-card-actions">
+                    <a href="profile.html" class="btn-primary">View Full Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="dataManager.js"></script>
-    <script src="leaderboard.js"></script>
     <script src="profile.js"></script>
+    <script src="leaderboard.js"></script>
 </body>
 </html>
