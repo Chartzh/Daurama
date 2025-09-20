@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -21,7 +20,6 @@
                 <li><a href="leaderboard.html">Leaderboard</a></li>
                 <li><a href="profile.html">Profile</a></li>
             </ul>
-            <!-- User Info Display -->
             <div id="user-info">
                 <div class="level-badge">
                     <img src="source/icons/star.png" alt="Star Icon" style="height: 20px;">
@@ -38,13 +36,6 @@
         </div>
     </nav>
 
-    <!-- Language Selector -->
-    <div class="lang-selector">
-        <button id="lang-id" class="lang-btn active">ID</button>
-        <button id="lang-en" class="lang-btn">EN</button>
-    </div>
-
-    <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-container">
             <div class="hero-content">
@@ -61,7 +52,6 @@
         </div>
     </section>
 
-    <!-- Upload Section -->
     <section id="analyze" class="upload-section">
         <div class="upload-container">
             <h2 class="section-title" id="uploadTitle">Analyze Your Waste</h2>
@@ -86,7 +76,6 @@
         </div>
     </section>
 
-    <!-- Results Section -->
     <section class="results-section" id="result">
         <div class="results-container">
             <div class="result-card">
@@ -94,8 +83,7 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <h3 class="result-title" id="analysisResultTitle">Analysis Result</h3>
-                <div class="result-grid"> <!-- Changed from result-info -->
-                    <div class="info-card">
+                <div class="result-grid"> <div class="info-card">
                         <div class="info-label" id="resultObjectLabel">Detected Object:</div>
                         <div class="info-value" id="objectNameDisplay">-</div>
                     </div>
@@ -103,15 +91,12 @@
                         <div class="info-label" id="resultMaterialLabel">Material Type:</div>
                         <div class="info-value" id="materialDisplay">-</div>
                     </div>
-                    <div class="info-card full-width"> <!-- Added full-width class -->
-                        <div class="info-label" id="resultInstructionsLabel">Recycling Instructions:</div>
+                    <div class="info-card full-width"> <div class="info-label" id="resultInstructionsLabel">Recycling Instructions:</div>
                         <div class="info-value" id="instructionsDisplay">-</div>
                     </div>
-                    <div class="info-card eco-impact-card full-width"> <!-- Added full-width class -->
-                        <div class="info-label" id="resultEcoImpactLabel">Environmental Impact:</div>
+                    <div class="info-card eco-impact-card full-width"> <div class="info-label" id="resultEcoImpactLabel">Environmental Impact:</div>
                         <div class="eco-impact-display" id="ecoImpactDisplay">
-                            <!-- Eco impact items will be inserted here by JS -->
-                        </div>
+                            </div>
                     </div>
                 </div>
                 
@@ -125,34 +110,28 @@
         </div>
     </section>
 
-    <!-- Mini Game Section -->
     <section class="game-section" id="minigame-wrapper">
         <div class="game-container">
             <h3 class="game-title">Sorting Challenge</h3>
             <p>Drag the item to the correct recycling bin!</p>
             
             <div id="item-container">
-                <!-- Draggable item will be inserted here -->
-            </div>
+                </div>
 
             <div class="drop-zones-container">
                 <div class="drop-zone" id="anorganik-zone">
                     <img src="source/inorganic.png" alt="Anorganik" width="100">
-                    <span class="bin-label" id="inorganic-bin-label">Anorganik</span> <!-- NEW -->
-                </div>
+                    <span class="bin-label" id="inorganic-bin-label">Inorganic</span> </div>
                 <div class="drop-zone" id="organik-zone">
                     <img src="source/organic.png" alt="Organik" width="100">
-                    <span class="bin-label" id="organic-bin-label">Organik</span> <!-- NEW -->
-                </div>
+                    <span class="bin-label" id="organic-bin-label">Organic</span> </div>
                 <div class="drop-zone" id="kaca-zone">
                     <img src="source/glass.png" alt="Kaca" width="100">
-                    <span class="bin-label" id="glass-bin-label">Kaca</span> <!-- NEW -->
-                </div>
+                    <span class="bin-label" id="glass-bin-label">Glass</span> </div>
             </div>
         </div>
     </section>
 
-    <!-- Success Popup -->
     <div id="success-popup" class="popup-container">
         <div class="popup-content">
             <span class="close-btn">&times;</span>
@@ -165,18 +144,16 @@
         </div>
     </div>
 
-    <!-- Name Input Popup  -->
     <div id="name-input-popup" class="popup-container">
         <div class="popup-content">
             <span class="close-btn" id="closeNamePopup">&times;</span>
-            <h3><span id="enterNameTitle">Masukkan Nama Anda</span></h3>
-            <p id="enterNamePrompt">Masukkan nama Anda untuk Leaderboard:</p>
-            <input type="text" id="userNameInput" placeholder="Nama Anda" maxlength="20" class="name-input-field">
-            <button id="submitNameBtn" class="btn-primary" style="margin-top: 1rem;">Kirim</button>
+            <h3><span id="enterNameTitle">Enter Your Name</span></h3>
+            <p id="enterNamePrompt">Enter your name for the Leaderboard:</p>
+            <input type="text" id="userNameInput" placeholder="Your Name" maxlength="20" class="name-input-field">
+            <button id="submitNameBtn" class="btn-primary" style="margin-top: 1rem;">Submit</button>
         </div>
     </div>
 
-    <!-- Pet Card Section -->
     <div id="pet-card-overlay" class="pet-card-overlay" onclick="hidePetCard()">
         <div class="pet-card" onclick="event.stopPropagation()">
             <div class="pet-card-header">
@@ -203,7 +180,6 @@
         </div>
     </div>
 
-    <!-- Features Section -->
     <section id="features" class="features-section">
         <div class="features-container">
             <h2 class="section-title">Why Choose Daurama?</h2>

@@ -1,83 +1,5 @@
-let currentLang = 'id';
 let draggedItem = null;
-
-// Language switching functionality
-const translations = {
-    'id': {
-        pageTitle: 'Daur Ulang Jadi Lebih Menyenangkan',
-        heroDescription: 'Temukan cara cerdas mengelola sampah Anda dengan teknologi AI. Lewati tantangan mini-game, lacak kontribusi pribadi Anda, dan jadilah bagian dari komunitas yang peduli lingkungan.',
-        uploadTitle: 'Analisis Sampah Anda',
-        uploadSubtitle: 'Unggah gambar item sampah Anda dan dapatkan instruksi daur ulang instan',
-        uploadText: 'Klik untuk mengunggah atau seret & lepas',
-        uploadSubtext: 'Mendukung JPG, PNG, GIF hingga 10MB',
-        analyzeText: 'Analisis Sampah',
-        analysisResultTitle: 'Hasil Analisis',
-        resultObjectLabel: 'Objek Terdeteksi:',
-        resultInstructionsLabel: 'Instruksi Daur Ulang:',
-        resultMaterialLabel: 'Jenis Material:',
-        resultEcoImpactLabel: 'Dampak Lingkungan:',
-        alert_message: 'Silakan pilih gambar terlebih dahulu!',
-        analyzing_message: 'Menganalisis...',
-        error_message: 'Terjadi kesalahan saat menganalisis gambar.',
-        view_report: 'Lihat Laporan Dampak',
-        leaderboard_title: 'Papan Peringkat Daur Ulang',
-        enter_name_prompt: 'Masukkan nama Anda untuk Leaderboard:',
-        submit_name: 'Kirim',
-        leaderboard_rank: 'Peringkat',
-        leaderboard_name: 'Nama',
-        leaderboard_items: 'Item Didaur Ulang',
-        leaderboard_co2: 'CO₂ Dihemat',
-        leaderboard_energy: 'Energi Dihemat',
-        leaderboard_water: 'Air Dihemat',
-        no_leaderboard_data: 'Belum ada data di papan peringkat.',
-        congratulations_title: 'Selamat!',
-        correct_sort_message: 'Anda berhasil mendaur ulang item dengan benar!',
-        impact_saved_message: 'Dampak lingkungan Anda telah disimpan ke laporan.',
-        incorrect_sort_message: 'Salah! Coba lagi.',
-        minigame_title: 'Tantangan Pemilahan',
-        minigame_instruction: 'Seret item ke tempat sampah daur ulang yang benar!',
-        inorganic_bin: 'Anorganik',
-        organic_bin: 'Organik',
-        glass_bin: 'Kaca',
-    },
-    'en': {
-        pageTitle: 'Recycling Just Got Fun',
-        heroDescription: 'Discover a smart way to manage your waste with AI technology. Go through mini-game challenges, track your personal contributions, and become a part of a community that cares about the environment.',
-        uploadTitle: 'Analyze Your Waste',
-        uploadSubtitle: 'Upload an image of your waste item and get instant recycling instructions',
-        uploadText: 'Click to upload or drag & drop',
-        uploadSubtext: 'Supports JPG, PNG, GIF up to 10MB',
-        analyzeText: 'Analyze Waste',
-        analysisResultTitle: 'Analysis Result',
-        resultObjectLabel: 'Detected Object:',
-        resultInstructionsLabel: 'Recycling Instructions:',
-        resultMaterialLabel: 'Material Type:',
-        resultEcoImpactLabel: 'Environmental Impact:',
-        alert_message: 'Please select an image first!',
-        analyzing_message: 'Analyzing...',
-        error_message: 'An error occurred while analyzing the image.',
-        view_report: 'View Impact Report',
-        leaderboard_title: 'Recycling Leaderboard',
-        enter_name_prompt: 'Enter your name for the Leaderboard:',
-        submit_name: 'Submit',
-        leaderboard_rank: 'Rank',
-        leaderboard_name: 'Name',
-        leaderboard_items: 'Items Recycled',
-        leaderboard_co2: 'CO₂ Saved',
-        leaderboard_energy: 'Energy Saved',
-        leaderboard_water: 'Water Saved',
-        no_leaderboard_data: 'No leaderboard data yet.',
-        congratulations_title: 'Congratulations!',
-        correct_sort_message: 'You successfully recycled the item correctly!',
-        impact_saved_message: 'Your environmental impact has been saved to your report.',
-        incorrect_sort_message: 'Incorrect! Try again.',
-        minigame_title: 'Sorting Challenge',
-        minigame_instruction: 'Drag the item to the correct recycling bin!',
-        inorganic_bin: 'Inorganic',
-        organic_bin: 'Organic',
-        glass_bin: 'Glass',
-    }
-};
+let isGameActive = false; // Flag untuk melacak status mini-game
 
 // Show level up notification
 function showLevelUpNotification() {
@@ -98,61 +20,6 @@ function showLevelUpNotification() {
     setTimeout(() => { notification.remove(); }, 3000);
 }
 
-function loadTranslations(lang) {
-    currentLang = lang;
-    const t = translations[lang];
-
-    document.getElementById('pageTitle').textContent = t.pageTitle;
-    document.getElementById('heroDescription').textContent = t.heroDescription;
-    document.getElementById('uploadTitle').textContent = t.uploadTitle;
-    document.getElementById('uploadSubtitle').textContent = t.uploadSubtitle;
-    document.getElementById('uploadText').textContent = t.uploadText;
-    document.getElementById('uploadSubtext').textContent = t.uploadSubtext;
-    document.getElementById('analyzeText').textContent = t.analyzeText;
-    document.getElementById('analysisResultTitle').textContent = t.analysisResultTitle;
-    document.getElementById('resultObjectLabel').textContent = t.resultObjectLabel;
-    document.getElementById('resultInstructionsLabel').textContent = t.resultInstructionsLabel;
-
-    // Update labels baru
-    const materialLabel = document.getElementById('resultMaterialLabel');
-    const ecoImpactLabel = document.getElementById('resultEcoImpactLabel');
-    const viewReportBtn = document.getElementById('viewReportBtn');
-    const minigameTitle = document.querySelector('#minigame-wrapper .game-title');
-    const minigameInstruction = document.querySelector('#minigame-wrapper p');
-    const inorganicZoneLabel = document.querySelector('#anorganik-zone .bin-label'); // Assuming you add this label
-    const organicZoneLabel = document.querySelector('#organik-zone .bin-label'); // Assuming you add this label
-    const glassZoneLabel = document.querySelector('#kaca-zone .bin-label'); // Assuming you add this label
-    const successPopupTitle = document.querySelector('#success-popup h3');
-    const successPopupMessage1 = document.querySelector('#success-popup p:nth-of-type(1)');
-    const successPopupMessage2 = document.querySelector('#success-popup p:nth-of-type(2)');
-    const nameInputPrompt = document.querySelector('#name-input-popup .popup-content p');
-    const submitNameBtn = document.getElementById('submitNameBtn');
-
-
-
-    if (materialLabel) materialLabel.textContent = t.resultMaterialLabel;
-    if (ecoImpactLabel) ecoImpactLabel.textContent = t.resultEcoImpactLabel;
-    if (viewReportBtn) viewReportBtn.textContent = t.view_report;
-    if (minigameTitle) minigameTitle.textContent = t.minigame_title;
-    if (minigameInstruction) minigameInstruction.textContent = t.minigame_instruction;
-    if (inorganicZoneLabel) inorganicZoneLabel.textContent = t.inorganic_bin;
-    if (organicZoneLabel) organicZoneLabel.textContent = t.organic_bin;
-    if (glassZoneLabel) glassZoneLabel.textContent = t.glass_bin;
-    if (successPopupTitle) successPopupTitle.textContent = t.congratulations_title;
-    if (successPopupMessage1) successPopupMessage1.textContent = t.correct_sort_message;
-    if (successPopupMessage2) successPopupMessage2.textContent = t.impact_saved_message;
-    if (nameInputPrompt) nameInputPrompt.textContent = t.enter_name_prompt;
-    if (submitNameBtn) submitNameBtn.textContent = t.submit_name;
-
-    // Update active language button
-    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(`lang-${lang}`).classList.add('active');
-}
-
-// Event listeners
-document.getElementById('lang-en').addEventListener('click', () => loadTranslations('en'));
-document.getElementById('lang-id').addEventListener('click', () => loadTranslations('id'));
-
 // Image upload functionality
 const imageUpload = document.getElementById('imageUpload');
 const previewContainer = document.querySelector('.preview-container'); 
@@ -172,24 +39,23 @@ imageUpload.addEventListener('change', function (e) {
     }
 });
 
-// Updated analysis function dengan data yang lebih kaya
+// Updated analysis function with rich data
 analyzeBtn.addEventListener('click', async function () {
     const file = imageUpload.files[0];
-    const t = translations[currentLang];
 
     if (!file) {
-        alert(t.alert_message);
+        alert('Please select an image first!');
         return;
     }
 
     // Show loading state
     const analyzeText = document.getElementById('analyzeText');
-    analyzeText.innerHTML = '<span class="loading"></span> ' + t.analyzing_message;
+    analyzeText.innerHTML = '<span class="loading"></span> Analyzing...';
     analyzeBtn.disabled = true;
 
-    // Simulate API call delay dengan mock data yang diperkaya
+    // Simulate API call delay with enriched mock data
     setTimeout(() => {
-        // Mock results dengan data yang lebih detail
+        // Mock results with more detailed data
         const mockResults = [
             {
                 object_name: 'Plastic Bottle',
@@ -198,22 +64,22 @@ analyzeBtn.addEventListener('click', async function () {
                 instructions: 'Remove cap and label. Rinse bottle. Place in plastic recycling bin.',
                 eco_impact: {
                     co2: '250g',
-                    energy: '3 jam menyalakan lampu LED',
-                    water: '2.5 liter air bersih',
-                    decompose_time: '450 tahun'
+                    energy: '3 hours of LED light',
+                    water: '2.5 liters of clean water',
+                    decompose_time: '450 years'
                 },
                 timestamp: new Date().toISOString()
             },
             {
                 object_name: 'Glass Bottle',
                 type: 'kaca',
-                material: 'Kaca Soda-Lime',
+                material: 'Soda-Lime Glass',
                 instructions: 'Remove labels. Rinse thoroughly. Place in glass recycling bin.',
                 eco_impact: {
                     co2: '400g',
-                    energy: '5 jam menyalakan lampu LED',
-                    water: '0.5 liter air bersih',
-                    decompose_time: '1000 tahun'
+                    energy: '5 hours of LED light',
+                    water: '0.5 liters of clean water',
+                    decompose_time: '1000 years'
                 },
                 timestamp: new Date().toISOString()
             },
@@ -224,9 +90,9 @@ analyzeBtn.addEventListener('click', async function () {
                 instructions: 'Flatten box. Remove any tape or staples. Place in paper recycling bin.',
                 eco_impact: {
                     co2: '100g',
-                    energy: '1 jam menyalakan lampu LED',
-                    water: '5 liter air bersih',
-                    decompose_time: '3 bulan'
+                    energy: '1 hour of LED light',
+                    water: '5 liters of clean water',
+                    decompose_time: '3 months'
                 },
                 timestamp: new Date().toISOString()
             },
@@ -237,9 +103,9 @@ analyzeBtn.addEventListener('click', async function () {
                 instructions: 'Rinse can. Remove any remaining liquid. Place in metal recycling bin.',
                 eco_impact: {
                     co2: '500g',
-                    energy: '8 jam menyalakan lampu LED',
-                    water: '1 liter air bersih',
-                    decompose_time: '200 tahun'
+                    energy: '8 hours of LED light',
+                    water: '1 liter of clean water',
+                    decompose_time: '200 years'
                 },
                 timestamp: new Date().toISOString()
             }
@@ -247,11 +113,11 @@ analyzeBtn.addEventListener('click', async function () {
 
         const randomResult = mockResults[Math.floor(Math.random() * mockResults.length)];
 
-        // Update tampilan hasil
+        // Update result display
         objectNameDisplay.textContent = randomResult.object_name;
         instructionsDisplay.textContent = randomResult.instructions;
 
-        // Update tampilan material dan eco impact baru
+        // Update new material and eco impact display
         const materialDisplay = document.getElementById('materialDisplay');
         const ecoImpactDisplay = document.getElementById('ecoImpactDisplay');
 
@@ -262,19 +128,19 @@ analyzeBtn.addEventListener('click', async function () {
         if (ecoImpactDisplay) {
             ecoImpactDisplay.innerHTML = `
                 <div class="eco-impact-item">
-                    <span class="eco-label">CO₂ yang dapat dihemat:</span>
+                    <span class="eco-label">CO₂ Saved:</span>
                     <span class="eco-value">${randomResult.eco_impact.co2}</span>
                 </div>
                 <div class="eco-impact-item">
-                    <span class="eco-label">Energi yang dihemat:</span>
+                    <span class="eco-label">Energy Saved:</span>
                     <span class="eco-value">${randomResult.eco_impact.energy}</span>
                 </div>
                 <div class="eco-impact-item">
-                    <span class="eco-label">Air yang dihemat:</span>
+                    <span class="eco-label">Water Saved:</span>
                     <span class="eco-value">${randomResult.eco_impact.water}</span>
                 </div>
                 <div class="eco-impact-item">
-                    <span class="eco-label">Waktu terurai alami:</span>
+                    <span class="eco-label">Natural Decompose Time:</span>
                     <span class="eco-value">${randomResult.eco_impact.decompose_time}</span>
                 </div>
             `;
@@ -293,7 +159,7 @@ analyzeBtn.addEventListener('click', async function () {
         startGame(randomResult.type, randomResult);
 
         // Reset button state
-        analyzeText.textContent = t.analyzeText;
+        analyzeText.textContent = 'Analyze Waste';
         analyzeBtn.disabled = false;
 
         // Scroll to results
@@ -301,148 +167,11 @@ analyzeBtn.addEventListener('click', async function () {
     }, 2000);
 });
 
-function updatePetPreview() {
-    const user = loadUserData();
-    const level = Math.floor(user.exp / 100) + 1;
-    const petPreview = document.getElementById('pet-preview');
-    
-    if (petPreview) {
-        // Determine pet image based on level
-        let imagePath;
-        if (level <= 2) {
-            imagePath = 'source/pets/cat-level-1.png';
-        } else if (level <= 4) {
-            imagePath = 'source/pets/cat-level-3.png';
-        } else if (level <= 6) {
-            imagePath = 'source/pets/cat-level-5.png';
-        } else {
-            imagePath = 'source/pets/cat-level-7.png';
-        }
-        
-        petPreview.src = imagePath;
-        petPreview.alt = `Pet Level ${level}`;
-    }
-}
-
-function showPetCard() {
-    const user = loadUserData();
-    const level = Math.floor(user.exp / 100) + 1;
-    const currentExp = user.exp % 100;
-    const petNames = ['Pipo', 'Luna', 'Max', 'Bella', 'Charlie'];
-    const petName = petNames[Math.min(level - 1, petNames.length - 1)];
-    
-    // Create overlay if it doesn't exist
-    let overlay = document.getElementById('pet-card-overlay');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'pet-card-overlay';
-        overlay.className = 'pet-card-overlay';
-        overlay.onclick = hidePetCard;
-        
-        let imagePath;
-        if (level <= 2) {
-            imagePath = 'source/pets/cat-level-1.png';
-        } else if (level <= 4) {
-            imagePath = 'source/pets/cat-level-3.png';
-        } else if (level <= 6) {
-            imagePath = 'source/pets/cat-level-5.png';
-        } else {
-            imagePath = 'source/pets/cat-level-7.png';
-        }
-        
-        overlay.innerHTML = `
-            <div class="pet-card" onclick="event.stopPropagation()">
-                <div class="pet-card-header">
-                    <h3>${petName}</h3>
-                    <button class="close-pet-card" onclick="hidePetCard()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="pet-card-body">
-                    <div class="pet-card-image">
-                        <img src="${imagePath}" alt="Pet">
-                    </div>
-                    <div class="pet-card-info">
-                        <p><strong>Level:</strong> ${level}</p>
-                        <p><strong>EXP:</strong> ${currentExp}/100</p>
-                        <div class="card-exp-bar">
-                            <div class="card-exp-fill" style="width: ${(currentExp / 100) * 100}%"></div>
-                        </div>
-                    </div>
-                    <div class="pet-card-actions">
-                        <a href="profile.html" class="btn-primary">View Full Profile</a>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(overlay);
-    }
-    
-    overlay.style.display = 'flex';
-}
-
-function hidePetCard() {
-    const overlay = document.getElementById('pet-card-overlay');
-    if (overlay) {
-        overlay.style.display = 'none';
-    }
-}
-
-function checkPetLevelUp(oldExp, newExp) {
-    const oldLevel = Math.floor(oldExp / 100) + 1;
-    const newLevel = Math.floor(newExp / 100) + 1;
-    
-    if (newLevel > oldLevel) {
-        showPetLevelUpNotification(newLevel);
-    }
-}
-
-function showPetLevelUpNotification(newLevel) {
-    const petNames = ['Pipo', 'Luna', 'Max', 'Bella', 'Charlie'];
-    const petName = petNames[Math.min(newLevel - 1, petNames.length - 1)];
-    
-    let imagePath;
-    if (newLevel <= 2) {
-        imagePath = 'source/pets/cat-level-1.png';
-    } else if (newLevel <= 4) {
-        imagePath = 'source/pets/cat-level-3.png';
-    } else if (newLevel <= 6) {
-        imagePath = 'source/pets/cat-level-5.png';
-    } else {
-        imagePath = 'source/pets/cat-level-7.png';
-    }
-    
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        background: linear-gradient(135deg, #4CAF50, #45a049); color: white;
-        padding: 2rem; border-radius: 15px; text-align: center; z-index: 3000;
-        box-shadow: 0 20px 60px rgba(76, 175, 80, 0.3); 
-        animation: petLevelUpPulse 0.5s ease-in-out;
-    `;
-    notification.innerHTML = `
-        <div style="font-size: 3rem; margin-bottom: 1rem;">
-            <img src="${imagePath}" alt="Pet" style="width: 80px; height: 80px; border-radius: 50%;">
-        </div>
-        <h3>${petName} Leveled Up!</h3>
-        <p>Your pet reached Level ${newLevel}!</p>
-        <p style="font-size: 0.9rem; opacity: 0.9;">Keep recycling to help ${petName} grow even more!</p>
-    `;
-    document.body.appendChild(notification);
-    setTimeout(() => { 
-        if (notification.parentNode) {
-            notification.remove(); 
-        }
-    }, 4000);
-}
-
-// Mini-game functionality dengan data storage
+// Mini-game functionality with data storage
 function startGame(itemType, resultData) {
     const gameSection = document.getElementById('minigame-wrapper');
     const itemContainer = document.getElementById('item-container');
-    gameSection.style.display = 'block';
-
+    
     const item = document.createElement('div');
     item.className = 'draggable-item';
     item.draggable = true;
@@ -461,41 +190,20 @@ function startGame(itemType, resultData) {
         e.target.style.opacity = '1';
         draggedItem = null;
     });
+
+    isGameActive = true; // PERBAIKAN: Set game menjadi aktif
+    gameSection.style.display = 'block'; // Tampilkan sesi game
 }
 
 function getItemIcon(type) {
     const icons = {
-        'anorganik': '<img src="source/icons/plastic_bottle.png" alt="Anorganik" class="game-icon">',
-        'organik': '<img src="source/icons/sprout.png" alt="Organik" class="game-icon">',
-        'kaca': '<img src="source/icons/glass_bottle.png" alt="Kaca" class="game-icon">'
+        'anorganik': '<img src="source/icons/plastic_bottle.png" alt="Inorganic" class="game-icon">',
+        'organik': '<img src="source/icons/box.png" alt="Organic" class="game-icon">',
+        'kaca': '<img src="source/icons/glass_bottle.png" alt="Glass" class="game-icon">'
     };
-    const defaultIcon = '<img src="source/icons/trashcan_category.png" alt="Sampah" class="game-icon">';
+    const defaultIcon = '<img src="source/icons/trashcan_category.png" alt="Waste" class="game-icon">';
     
     return icons[type] || defaultIcon;
-}
-
-function handleDragStart(e) {
-    draggedItem = this;
-    this.style.opacity = '0.5';
-    this.style.transform = 'rotate(5deg)';
-}
-
-function handleDragEnd(e) {
-    this.style.opacity = '';
-    this.style.transform = '';
-}
-
-function handleDragOver(e) {
-    e.preventDefault();
-}
-
-function handleDragEnter(e) {
-    e.preventDefault();
-    this.classList.add('drag-over');
-}
-
-function handleDragLeave(e) {
-    this.classList.remove('drag-over');
 }
 
 function handleDrop(e) {
@@ -503,16 +211,28 @@ function handleDrop(e) {
     const dropZone = this;
     dropZone.classList.remove('drag-over');
 
-    if (draggedItem) {
+    // PERBAIKAN: Hanya proses jika item ada dan game sedang aktif
+    if (draggedItem && isGameActive) {
         const itemType = draggedItem.dataset.type;
         const zoneType = dropZone.id.replace('-zone', '');
 
         if (itemType === zoneType) {
+            // JIKA BENAR
+            isGameActive = false; // PERBAIKAN: Langsung nonaktifkan game untuk mencegah input ganda
+
             const resultData = JSON.parse(draggedItem.dataset.result);
             processSuccessfulSort(resultData); 
-            draggedItem.remove();
+            
+            draggedItem.remove(); // Hapus item dari DOM
+
+            // PERBAIKAN: Sembunyikan sesi game setelah berhasil
+            const gameSection = document.getElementById('minigame-wrapper');
+            setTimeout(() => {
+                gameSection.style.display = 'none';
+            }, 500);
+
         } else {
-            // JIKA SALAH: Tampilkan feedback visual tanpa alert
+            // JIKA SALAH: Tampilkan feedback visual
             dropZone.classList.add('drop-incorrect');
             setTimeout(() => {
                 dropZone.classList.remove('drop-incorrect');
@@ -523,14 +243,13 @@ function handleDrop(e) {
 
 function processSuccessfulSort(resultData) {
     const user = loadUserData();
-    
     const oldExp = user.exp;
     
     if (user.name && user.name !== 'Anonymous') {
         saveDataAndAddExp(user.name, resultData);
         
         const newUser = loadUserData();
-        checkPetLevelUp(oldExp, newUser.exp);
+        checkLevelUp(oldExp, newUser.exp);
         
         showSuccessPopup();
     } else {
@@ -552,7 +271,7 @@ function showNameInputPopup(resultData, oldExp) {
         saveDataAndAddExp(userName, resultData);
         
         const newUser = loadUserData();
-        checkPetLevelUp(oldExp, newUser.exp);
+        checkLevelUp(oldExp, newUser.exp);
         
         nameInputPopup.style.display = 'none';
         showSuccessPopup();
@@ -567,11 +286,6 @@ function saveDataAndAddExp(userName, resultData) {
 
 function showSuccessPopup() {
     const popup = document.getElementById('success-popup');
-    const t = translations[currentLang];
-    document.querySelector('#success-popup h3').textContent = t.congratulations_title;
-    document.querySelector('#success-popup p:nth-of-type(1)').textContent = t.correct_sort_message;
-    document.querySelector('#success-popup p:nth-of-type(2)').textContent = t.impact_saved_message;
-
     popup.style.display = 'flex';
 
     // Auto close after 3 seconds
@@ -581,9 +295,14 @@ function showSuccessPopup() {
 }
 
 // Close popup functionality
-document.querySelector('.close-btn').addEventListener('click', function () {
+document.querySelector('#success-popup .close-btn').addEventListener('click', function () {
     document.getElementById('success-popup').style.display = 'none';
 });
+
+document.querySelector('#name-input-popup .close-btn').addEventListener('click', function () {
+    document.getElementById('name-input-popup').style.display = 'none';
+});
+
 
 // Smooth scrolling function
 function scrollToSection(sectionId) {
@@ -605,49 +324,13 @@ window.addEventListener('scroll', function () {
     }
 });
 
-// Add shake animation
-const shakeKeyframes = `
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-            20%, 40%, 60%, 80% { transform: translateX(10px); }
-        }`;
-
-const style = document.createElement('style');
-style.textContent = shakeKeyframes;
-document.head.appendChild(style);
-
 document.addEventListener('DOMContentLoaded', function () {
-    loadTranslations(currentLang); 
     updateNavbarUI();
     updatePetPreview();
-
-    const levelUpStyles = `
-        @keyframes levelUpPulse {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-    `;
 
     const petPreview = document.getElementById('pet-preview');
     if (petPreview) {
         petPreview.addEventListener('click', showPetCard);
-    }
-
-    const petLevelUpStyles = `
-        @keyframes petLevelUpPulse {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-    `;
-
-    if (!document.getElementById('pet-level-up-styles')) {
-        const style = document.createElement('style');
-        style.id = 'pet-level-up-styles';
-        style.textContent = petLevelUpStyles;
-        document.head.appendChild(style);
     }
 
     const dropZones = document.querySelectorAll('.drop-zone');
@@ -657,10 +340,6 @@ document.addEventListener('DOMContentLoaded', function () {
         zone.addEventListener('dragenter', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
         zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
     });
-
-    const style = document.createElement('style');
-    style.textContent = levelUpStyles;
-    document.head.appendChild(style);
     
     const viewReportBtn = document.getElementById('viewReportBtn');
     if (viewReportBtn) {

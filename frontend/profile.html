@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Pet - Daurama</title>
+    <title>Pet Profile - Daurama</title>
     <link rel="icon" type="image/png" href="source/Daurama_logo.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -21,7 +20,6 @@
                 <li><a href="leaderboard.html">Leaderboard</a></li>
                 <li><a href="profile.html">Profile</a></li>
             </ul>
-            <!-- User Info Display -->
             <div id="user-info">
                 <div class="level-badge">
                     <img src="source/icons/star.png" alt="Star Icon" style="height: 20px;">
@@ -38,29 +36,22 @@
         </div>
     </nav>
 
-    <div class="lang-selector">
-        <button id="lang-id" class="lang-btn active">ID</button>
-        <button id="lang-en" class="lang-btn">EN</button>
-    </div>
-
-    <!-- Profile Hero Section -->
     <section class="profile-hero">
         <div class="profile-container">
             <h1 class="profile-title">
-                <i class="fas fa-user"></i>
-                Profil Pet Anda
+                <i class="fas fa-paw"></i>
+                Your Pet Profile
             </h1>
             <p class="profile-subtitle">
-                Lihat perkembangan teman virtual Anda dalam perjalanan daur ulang!
+                See your virtual companion's progress on your recycling journey!
             </p>
             <a href="index.html" class="back-button">
                 <i class="fas fa-arrow-left"></i>
-                Kembali ke Beranda
+                Back to Home
             </a>
         </div>
     </section>
 
-    <!-- Pet Profile Section -->
     <section class="pet-profile-section">
         <div class="profile-container">
             <div class="profile-card">
@@ -73,7 +64,7 @@
                 
                 <div class="pet-info">
                     <h3 id="pet-name">Nura</h3>
-                    <p class="pet-description">Teman virtual Anda yang akan berkembang seiring dengan aktivitas daur ulang!</p>
+                    <p class="pet-description">Your virtual friend that grows along with your recycling activities!</p>
                     
                     <div class="pet-stats">
                         <div class="stat-item">
@@ -103,7 +94,6 @@
                 </div>
             </div>
 
-            <!-- Pet Evolution Preview -->
             <div class="evolution-preview">
                 <h3>Evolution Stages</h3>
                 <div class="evolution-stages">
@@ -130,7 +120,6 @@
                 </div>
             </div>
 
-            <!-- Pet Care Tips -->
             <div class="pet-care-tips">
                 <h3>How to Care for Your Pet</h3>
                 <div class="tips-grid">
@@ -154,7 +143,6 @@
         </div>
     </section>
 
-    <!-- Pet Details Card (Hidden by default) -->
     <div id="pet-card-overlay" class="pet-card-overlay" onclick="hidePetCard()">
         <div class="pet-card" onclick="event.stopPropagation()">
             <div class="pet-card-header">

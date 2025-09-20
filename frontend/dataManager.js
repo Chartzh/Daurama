@@ -5,71 +5,82 @@ const EXP_PER_ITEM = 25;
 const EXP_TO_LEVEL_UP = 100;
 
 /**
- * Memuat data pengguna (level, exp, nama) dari localStorage.
- * @returns {object} Objek data pengguna.
+ * Loads user data (level, exp, name) from localStorage.
+ * @returns {object} The user data object.
  */
 function loadUserData() {
     try {
         const data = JSON.parse(localStorage.getItem(KEY_USER));
         if (data && typeof data.level === 'number' && typeof data.exp === 'number') {
+            const calculatedLevel = Math.floor(data.exp / EXP_TO_LEVEL_UP) + 1;
+            
+            if (data.level !== calculatedLevel) {
+                console.warn(
+                    `Inconsistency detected! Stored level was ${data.level}, but calculated level is ${calculatedLevel}. Correcting...`
+                );
+                data.level = calculatedLevel; 
+                saveUserData(data); 
+            }
+
             return data;
         }
     } catch (e) {
-        console.error("Gagal memuat data pengguna:", e);
+        console.error("Failed to load user data:", e);
     }
-    // Mengembalikan data default jika tidak ada atau tidak valid
     return { level: 1, exp: 0, name: '' };
 }
 
 /**
- * Menyimpan data pengguna ke localStorage.
- * @param {object} userData - Objek data pengguna untuk disimpan.
+ * Saves user data to localStorage.
+ * @param {object} userData - The user data object to save.
  */
 function saveUserData(userData) {
     localStorage.setItem(KEY_USER, JSON.stringify(userData));
 }
 
 /**
- * Menambahkan poin pengalaman (EXP) ke pengguna dan menangani kenaikan level.
- * @param {number} amount - Jumlah EXP yang ditambahkan.
+ * Adds experience points (EXP) to the user and handles leveling up.
+ * @param {number} amount - The amount of EXP to add.
  */
 function addExp(amount) {
     const user = loadUserData();
-    user.exp += amount;
+    user.exp += amount; 
 
-    while (user.exp >= EXP_TO_LEVEL_UP) {
-        user.exp -= EXP_TO_LEVEL_UP;
-        user.level += 1;
-        console.log(`NAIK LEVEL! Mencapai level ${user.level}`);
-    }
+    const newLevel = Math.floor(user.exp / EXP_TO_LEVEL_UP) + 1;
     
-    saveUserData(user);
-    updateNavbarUI(); // Perbarui UI setelah menambah EXP
+    if (newLevel > user.level) {
+        console.log(`LEVEL UP! Reached level ${newLevel}`);
+    }
+    user.level = newLevel; 
+
+    saveUserData(user); 
+    updateNavbarUI(); 
 }
 
 /**
- * Memperbarui tampilan Level dan EXP di navbar.
- * Fungsi ini dipanggil dari setiap halaman.
+ * Updates the Level and EXP display in the navbar.
+ * This function is called from every page.
  */
 function updateNavbarUI() {
     const user = loadUserData();
     const userLevelEl = document.getElementById('user-level');
     const userExpEl = document.getElementById('user-exp');
     const expProgressEl = document.getElementById('exp-progress');
+    const currentLevelExp = user.exp % EXP_TO_LEVEL_UP;
 
     if (userLevelEl) userLevelEl.textContent = user.level;
-    if (userExpEl) userExpEl.textContent = user.exp;
+    if (userExpEl) userExpEl.textContent = currentLevelExp; 
     
     if (expProgressEl) {
-        const progressPercentage = (user.exp / EXP_TO_LEVEL_UP) * 100;
+        const progressPercentage = (currentLevelExp / EXP_TO_LEVEL_UP) * 100;
         expProgressEl.style.width = `${progressPercentage}%`;
     }
 }
 
 
 /**
- * Memuat riwayat aktivitas dari localStorage.
- * @returns {Array} Array item riwayat.
+ * Loads activity history from localStorage.
+ * @returns {Array} Array of history items.
  */
 function loadHistory() {
     try {
@@ -84,12 +95,12 @@ function saveToHistory(resultData) {
     try {
         let history = JSON.parse(localStorage.getItem(KEY_HISTORY)) || [];
 
-        // Tambahkan timestamp jika belum ada
+        // Add a timestamp if it doesn't exist
         if (!resultData.timestamp) {
             resultData.timestamp = new Date().toISOString();
         }
 
-        // Tambahkan ID unik
+        // Add a unique ID
         resultData.id = Date.now() + Math.random();
 
         history.push(resultData);
@@ -102,22 +113,22 @@ function saveToHistory(resultData) {
 }
 
 /**
- * Memuat data papan peringkat dari localStorage.
- * @returns {Array} Array entri papan peringkat.
+ * Loads leaderboard data from localStorage.
+ * @returns {Array} Array of leaderboard entries.
  */
 function loadLeaderboard() {
     try {
         return JSON.parse(localStorage.getItem(KEY_LEADERBOARD)) || [];
     } catch (error) {
-        console.error('Gagal memuat papan peringkat:', error);
+        console.error('Failed to load leaderboard:', error);
         return [];
     }
 }
 
 /**
- * Memperbarui papan peringkat dengan data baru.
- * @param {string} userName - Nama pengguna.
- * @param {object} resultData - Data hasil analisis.
+ * Updates the leaderboard with new data.
+ * @param {string} userName - The user's name.
+ * @param {object} resultData - The analysis result data.
  */
 function updateLeaderboard(userName, resultData) {
     let leaderboard = JSON.parse(localStorage.getItem(KEY_LEADERBOARD)) || [];
