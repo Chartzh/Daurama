@@ -58,7 +58,7 @@ function renderSummaryDashboard(stats) {
     dashboard.innerHTML = `
         <div class="summary-card">
             <div class="summary-icon">
-                <i class="fas fa-recycle"></i>
+                <img src="source/icons/recycle.png" alt="Recycle Icon" style="height: 55px;">
             </div>
             <div class="summary-value">${stats.totalItems}</div>
             <div class="summary-label">Total Item Didaur Ulang</div>
@@ -66,7 +66,7 @@ function renderSummaryDashboard(stats) {
 
         <div class="summary-card">
             <div class="summary-icon">
-                <i class="fas fa-leaf"></i>
+                <img src="source/icons/leaf.png" alt="Leaf Icon" style="height: 55px;">
             </div>
             <div class="summary-value">${stats.totalCO2Saved}g</div>
             <div class="summary-label">CO₂ yang Dihemat</div>
@@ -74,7 +74,7 @@ function renderSummaryDashboard(stats) {
 
         <div class="summary-card">
             <div class="summary-icon">
-                <i class="fas fa-bolt"></i>
+                <img src="source/icons/bolt.png" alt="Bolt Icon" style="height: 55px;">
             </div>
             <div class="summary-value">${stats.totalEnergySaved.toFixed(1)} jam</div>
             <div class="summary-label">Energi yang Dihemat</div>
@@ -82,7 +82,7 @@ function renderSummaryDashboard(stats) {
 
         <div class="summary-card">
             <div class="summary-icon">
-                <i class="fas fa-tint"></i>
+                <img src="source/icons/water.png" alt="Water Icon" style="height: 55px;">
             </div>
             <div class="summary-value">${stats.totalWaterSaved.toFixed(1)}L</div>
             <div class="summary-label">Air yang Dihemat</div>
@@ -90,7 +90,7 @@ function renderSummaryDashboard(stats) {
 
         <div class="summary-card">
             <div class="summary-icon">
-                <i class="fas fa-trash-alt"></i>
+                <img src="source/icons/trashcan.png" alt="Trashcan Icon" style="height: 55px;">
             </div>
             <div class="summary-value">${stats.itemsByType.anorganik}</div>
             <div class="summary-label">Sampah Anorganik</div>
@@ -98,7 +98,7 @@ function renderSummaryDashboard(stats) {
 
         <div class="summary-card">
             <div class="summary-icon">
-                <i class="fas fa-seedling"></i>
+                <img src="source/icons/sprout.png" alt="Sprout Icon" style="height: 55px;">
             </div>
             <div class="summary-value">${stats.itemsByType.organik}</div>
             <div class="summary-label">Sampah Organik</div>
@@ -106,7 +106,7 @@ function renderSummaryDashboard(stats) {
 
         <div class="summary-card">
             <div class="summary-icon">
-                <i class="fas fa-wine-bottle"></i>
+                <img src="source/icons/glass_bottle.png" alt="Glass Bottle Icon" style="height: 55px;">
             </div>
             <div class="summary-value">${stats.itemsByType.kaca}</div>
             <div class="summary-label">Sampah Kaca</div>
@@ -114,7 +114,7 @@ function renderSummaryDashboard(stats) {
 
         <div class="summary-card">
             <div class="summary-icon">
-                <i class="fas fa-calendar-day"></i>
+                <img src="source/icons/calender.png" alt="Calender Icon" style="height: 55px;">
             </div>
             <div class="summary-value">${getActiveDays()}</div>
             <div class="summary-label">Hari Aktif</div>
@@ -200,11 +200,11 @@ function renderHistoryList(historyData) {
 // Fungsi untuk mendapatkan ikon berdasarkan tipe
 function getTypeIcon(type) {
     const icons = {
-        'anorganik': '<i class="fas fa-bottle-water"></i>',
-        'organik': '<i class="fas fa-leaf"></i>',
-        'kaca': '<i class="fas fa-wine-bottle"></i>'
+        'anorganik': '<img src="source/icons/plastic_bottle.png" alt="Anorganik" class="game-icon" style="height: 50px;">',
+        'organik': '<img src="source/icons/sprout.png" alt="Organik" class="game-icon" style="height: 50px;">',
+        'kaca': '<img src="source/icons/glass_bottle.png" alt="Kaca" class="game-icon" style="height: 50px;">'
     };
-    return icons[type] || '<i class="fas fa-recycle"></i>';
+    return icons[type] || '<img src="source/icons/trashcan_category.png" alt="Sampah" class="game-icon">';
 }
 
 // Fungsi untuk memformat timestamp

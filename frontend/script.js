@@ -310,7 +310,7 @@ function startGame(itemType, resultData) {
     const item = document.createElement('div');
     item.className = 'draggable-item';
     item.draggable = true;
-    item.textContent = getItemIcon(itemType);
+    item.innerHTML = getItemIcon(itemType);
     item.dataset.type = itemType;
     item.dataset.result = JSON.stringify(resultData);
 
@@ -329,11 +329,13 @@ function startGame(itemType, resultData) {
 
 function getItemIcon(type) {
     const icons = {
-        'anorganik': '🥤',
-        'organik': '📦',
-        'kaca': '🍾'
+        'anorganik': '<img src="source/icons/plastic_bottle.png" alt="Anorganik" class="game-icon">',
+        'organik': '<img src="source/icons/sprout.png" alt="Organik" class="game-icon">',
+        'kaca': '<img src="source/icons/glass_bottle.png" alt="Kaca" class="game-icon">'
     };
-    return icons[type] || '🗑️';
+    const defaultIcon = '<img src="source/icons/trashcan_category.png" alt="Sampah" class="game-icon">';
+    
+    return icons[type] || defaultIcon;
 }
 
 function handleDragStart(e) {
