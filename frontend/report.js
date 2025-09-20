@@ -201,7 +201,7 @@ function renderHistoryList(historyData) {
 function getTypeIcon(type) {
     const icons = {
         'anorganik': '<img src="source/icons/plastic_bottle.png" alt="Anorganik" class="game-icon" style="height: 50px;">',
-        'organik': '<img src="source/icons/sprout.png" alt="Organik" class="game-icon" style="height: 50px;">',
+        'organik': '<img src="source/icons/box.png" alt="Organik" class="game-icon" style="height: 50px;">',
         'kaca': '<img src="source/icons/glass_bottle.png" alt="Kaca" class="game-icon" style="height: 50px;">'
     };
     return icons[type] || '<img src="source/icons/trashcan_category.png" alt="Sampah" class="game-icon">';
@@ -295,9 +295,17 @@ function initializeReportPage() {
     renderHistoryList(historyData);
     renderLeaderboard(leaderboardData);
 
+    if (typeof updatePetPreview === 'function') {
+        updatePetPreview();
+    }
+
     // Event listeners
     const clearBtn = document.getElementById('clearHistoryBtn');
     const exportBtn = document.getElementById('exportBtn');
+    const petPreview = document.getElementById('pet-preview');
+    if (petPreview && typeof showPetCard === 'function') {
+        petPreview.addEventListener('click', showPetCard);
+    }
     
     if (clearBtn) clearBtn.addEventListener('click', clearHistory);
     if (exportBtn) exportBtn.addEventListener('click', exportData);

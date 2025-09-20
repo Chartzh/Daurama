@@ -4,8 +4,8 @@ let draggedItem = null;
 // Language switching functionality
 const translations = {
     'id': {
-        pageTitle: 'Pengenalan Sampah Bertenaga AI',
-        heroDescription: 'Transformasi manajemen sampah Anda dengan teknologi AI cerdas. Unggah, analisis, dan dapatkan instruksi daur ulang instan untuk masa depan yang berkelanjutan.',
+        pageTitle: 'Daur Ulang Jadi Lebih Menyenangkan',
+        heroDescription: 'Temukan cara cerdas mengelola sampah Anda dengan teknologi AI. Lewati tantangan mini-game, lacak kontribusi pribadi Anda, dan jadilah bagian dari komunitas yang peduli lingkungan.',
         uploadTitle: 'Analisis Sampah Anda',
         uploadSubtitle: 'Unggah gambar item sampah Anda dan dapatkan instruksi daur ulang instan',
         uploadText: 'Klik untuk mengunggah atau seret & lepas',
@@ -41,8 +41,8 @@ const translations = {
         glass_bin: 'Kaca',
     },
     'en': {
-        pageTitle: 'AI-Powered Waste Recognition',
-        heroDescription: 'Transform your waste management with intelligent AI technology. Upload, analyze, and get instant recycling instructions for a sustainable future.',
+        pageTitle: 'Recycling Just Got Fun',
+        heroDescription: 'Discover a smart way to manage your waste with AI technology. Go through mini-game challenges, track your personal contributions, and become a part of a community that cares about the environment.',
         uploadTitle: 'Analyze Your Waste',
         uploadSubtitle: 'Upload an image of your waste item and get instant recycling instructions',
         uploadText: 'Click to upload or drag & drop',
@@ -301,6 +301,142 @@ analyzeBtn.addEventListener('click', async function () {
     }, 2000);
 });
 
+function updatePetPreview() {
+    const user = loadUserData();
+    const level = Math.floor(user.exp / 100) + 1;
+    const petPreview = document.getElementById('pet-preview');
+    
+    if (petPreview) {
+        // Determine pet image based on level
+        let imagePath;
+        if (level <= 2) {
+            imagePath = 'source/pets/cat-level-1.png';
+        } else if (level <= 4) {
+            imagePath = 'source/pets/cat-level-3.png';
+        } else if (level <= 6) {
+            imagePath = 'source/pets/cat-level-5.png';
+        } else {
+            imagePath = 'source/pets/cat-level-7.png';
+        }
+        
+        petPreview.src = imagePath;
+        petPreview.alt = `Pet Level ${level}`;
+    }
+}
+
+function showPetCard() {
+    const user = loadUserData();
+    const level = Math.floor(user.exp / 100) + 1;
+    const currentExp = user.exp % 100;
+    const petNames = ['Pipo', 'Luna', 'Max', 'Bella', 'Charlie'];
+    const petName = petNames[Math.min(level - 1, petNames.length - 1)];
+    
+    // Create overlay if it doesn't exist
+    let overlay = document.getElementById('pet-card-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'pet-card-overlay';
+        overlay.className = 'pet-card-overlay';
+        overlay.onclick = hidePetCard;
+        
+        let imagePath;
+        if (level <= 2) {
+            imagePath = 'source/pets/cat-level-1.png';
+        } else if (level <= 4) {
+            imagePath = 'source/pets/cat-level-3.png';
+        } else if (level <= 6) {
+            imagePath = 'source/pets/cat-level-5.png';
+        } else {
+            imagePath = 'source/pets/cat-level-7.png';
+        }
+        
+        overlay.innerHTML = `
+            <div class="pet-card" onclick="event.stopPropagation()">
+                <div class="pet-card-header">
+                    <h3>${petName}</h3>
+                    <button class="close-pet-card" onclick="hidePetCard()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="pet-card-body">
+                    <div class="pet-card-image">
+                        <img src="${imagePath}" alt="Pet">
+                    </div>
+                    <div class="pet-card-info">
+                        <p><strong>Level:</strong> ${level}</p>
+                        <p><strong>EXP:</strong> ${currentExp}/100</p>
+                        <div class="card-exp-bar">
+                            <div class="card-exp-fill" style="width: ${(currentExp / 100) * 100}%"></div>
+                        </div>
+                    </div>
+                    <div class="pet-card-actions">
+                        <a href="profile.html" class="btn-primary">View Full Profile</a>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(overlay);
+    }
+    
+    overlay.style.display = 'flex';
+}
+
+function hidePetCard() {
+    const overlay = document.getElementById('pet-card-overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
+
+function checkPetLevelUp(oldExp, newExp) {
+    const oldLevel = Math.floor(oldExp / 100) + 1;
+    const newLevel = Math.floor(newExp / 100) + 1;
+    
+    if (newLevel > oldLevel) {
+        showPetLevelUpNotification(newLevel);
+    }
+}
+
+function showPetLevelUpNotification(newLevel) {
+    const petNames = ['Pipo', 'Luna', 'Max', 'Bella', 'Charlie'];
+    const petName = petNames[Math.min(newLevel - 1, petNames.length - 1)];
+    
+    let imagePath;
+    if (newLevel <= 2) {
+        imagePath = 'source/pets/cat-level-1.png';
+    } else if (newLevel <= 4) {
+        imagePath = 'source/pets/cat-level-3.png';
+    } else if (newLevel <= 6) {
+        imagePath = 'source/pets/cat-level-5.png';
+    } else {
+        imagePath = 'source/pets/cat-level-7.png';
+    }
+    
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #4CAF50, #45a049); color: white;
+        padding: 2rem; border-radius: 15px; text-align: center; z-index: 3000;
+        box-shadow: 0 20px 60px rgba(76, 175, 80, 0.3); 
+        animation: petLevelUpPulse 0.5s ease-in-out;
+    `;
+    notification.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 1rem;">
+            <img src="${imagePath}" alt="Pet" style="width: 80px; height: 80px; border-radius: 50%;">
+        </div>
+        <h3>${petName} Leveled Up!</h3>
+        <p>Your pet reached Level ${newLevel}!</p>
+        <p style="font-size: 0.9rem; opacity: 0.9;">Keep recycling to help ${petName} grow even more!</p>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => { 
+        if (notification.parentNode) {
+            notification.remove(); 
+        }
+    }, 4000);
+}
+
 // Mini-game functionality dengan data storage
 function startGame(itemType, resultData) {
     const gameSection = document.getElementById('minigame-wrapper');
@@ -387,27 +523,37 @@ function handleDrop(e) {
 
 function processSuccessfulSort(resultData) {
     const user = loadUserData();
+    
+    const oldExp = user.exp;
+    
     if (user.name && user.name !== 'Anonymous') {
         saveDataAndAddExp(user.name, resultData);
+        
+        const newUser = loadUserData();
+        checkPetLevelUp(oldExp, newUser.exp);
+        
         showSuccessPopup();
     } else {
-        showNameInputPopup(resultData);
+        showNameInputPopup(resultData, oldExp);
     }
 }
 
-function showNameInputPopup(resultData) {
+function showNameInputPopup(resultData, oldExp) {
     const nameInputPopup = document.getElementById('name-input-popup');
     const userNameInput = document.getElementById('userNameInput');
     const submitNameBtn = document.getElementById('submitNameBtn');
     nameInputPopup.style.display = 'flex';
 
-    // Menggunakan { once: true } untuk mencegah listener ganda
     submitNameBtn.addEventListener('click', function handleSubmit() {
         let userName = userNameInput.value.trim() || 'Anonymous';
         const user = loadUserData();
         user.name = userName;
         saveUserData(user);
         saveDataAndAddExp(userName, resultData);
+        
+        const newUser = loadUserData();
+        checkPetLevelUp(oldExp, newUser.exp);
+        
         nameInputPopup.style.display = 'none';
         showSuccessPopup();
     }, { once: true });
@@ -474,6 +620,7 @@ document.head.appendChild(style);
 document.addEventListener('DOMContentLoaded', function () {
     loadTranslations(currentLang); 
     updateNavbarUI();
+    updatePetPreview();
 
     const levelUpStyles = `
         @keyframes levelUpPulse {
@@ -482,6 +629,26 @@ document.addEventListener('DOMContentLoaded', function () {
             100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
     `;
+
+    const petPreview = document.getElementById('pet-preview');
+    if (petPreview) {
+        petPreview.addEventListener('click', showPetCard);
+    }
+
+    const petLevelUpStyles = `
+        @keyframes petLevelUpPulse {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+    `;
+
+    if (!document.getElementById('pet-level-up-styles')) {
+        const style = document.createElement('style');
+        style.id = 'pet-level-up-styles';
+        style.textContent = petLevelUpStyles;
+        document.head.appendChild(style);
+    }
 
     const dropZones = document.querySelectorAll('.drop-zone');
     dropZones.forEach(zone => {

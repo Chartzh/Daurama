@@ -146,3 +146,46 @@ function updateLeaderboard(userName, resultData) {
     leaderboard.sort((a, b) => b.itemsRecycled - a.itemsRecycled);
     localStorage.setItem(KEY_LEADERBOARD, JSON.stringify(leaderboard));
 }
+
+/**
+ * Get pet level based on experience points
+ * @param {number} exp - Total experience points
+ * @returns {number} Pet level
+ */
+function getPetLevel(exp) {
+    return Math.floor(exp / 100) + 1;
+}
+
+/**
+ * Get current level experience (0-99)
+ * @param {number} exp - Total experience points  
+ * @returns {number} Experience within current level
+ */
+function getCurrentLevelExp(exp) {
+    return exp % 100;
+}
+
+/**
+ * Update pet preview in navbar (if function doesn't exist in profile.js)
+ */
+function updatePetPreview() {
+    const user = loadUserData();
+    const level = getPetLevel(user.exp);
+    const petPreview = document.getElementById('pet-preview');
+    
+    if (petPreview) {
+        let imagePath;
+        if (level <= 2) {
+            imagePath = 'source/pets/cat-level-1.png';
+        } else if (level <= 4) {
+            imagePath = 'source/pets/cat-level-3.png';
+        } else if (level <= 6) {
+            imagePath = 'source/pets/cat-level-5.png';
+        } else {
+            imagePath = 'source/pets/cat-level-7.png';
+        }
+        
+        petPreview.src = imagePath;
+        petPreview.alt = `Pet Level ${level}`;
+    }
+}

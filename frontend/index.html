@@ -19,6 +19,7 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="report.html">Report</a></li>
                 <li><a href="leaderboard.html">Leaderboard</a></li>
+                <li><a href="profile.html">Profile</a></li>
             </ul>
             <!-- User Info Display -->
             <div id="user-info">
@@ -29,6 +30,9 @@
                 <div class="exp-bar">
                     <div id="exp-progress" class="exp-progress"></div>
                     <span class="exp-text"><span id="user-exp">0</span>/100 EXP</span>
+                </div>
+                <div class="pet-preview-container">
+                    <img id="pet-preview" src="source/pets/cat-level-1.png" alt="Pet" class="pet-preview">
                 </div>
             </div>
         </div>
@@ -45,19 +49,13 @@
         <div class="hero-container">
             <div class="hero-content">
                 <div class="hero-subtitle">SMART ENVIRONMENT</div>
-                <h1 class="hero-title" id="pageTitle">AI-Powered Waste Recognition</h1>
+                <h1 class="hero-title" id="pageTitle">Recycling Just Got Fun</h1>
                 <p class="hero-description" id="heroDescription">
-                    Transform your waste management with intelligent AI technology. Upload, analyze, and get instant recycling instructions for a sustainable future.
+                    Discover a smart way to manage your waste with AI technology. Go through mini-game challenges, track your personal contributions, and become a part of a community that cares about the environment.
                 </p>
                 <div class="hero-buttons">
                     <button class="btn-primary" onclick="scrollToSection('analyze')">Start Now</button>
-                    <button class="btn-secondary">Learn More</button>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="plant-container">
-                    <div class="plant-visual">
-                    </div>
+                    <a href="report.html" class="btn-secondary">View Contributions</a>
                 </div>
             </div>
         </div>
@@ -88,7 +86,7 @@
         </div>
     </section>
 
-        <!-- Results Section -->
+    <!-- Results Section -->
     <section class="results-section" id="result">
         <div class="results-container">
             <div class="result-card">
@@ -178,6 +176,33 @@
         </div>
     </div>
 
+    <!-- Pet Card Section -->
+    <div id="pet-card-overlay" class="pet-card-overlay" onclick="hidePetCard()">
+        <div class="pet-card" onclick="event.stopPropagation()">
+            <div class="pet-card-header">
+                <h3 id="card-pet-name">Pipo</h3>
+                <button class="close-pet-card" onclick="hidePetCard()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="pet-card-body">
+                <div class="pet-card-image">
+                    <img id="card-pet-image" src="source/pets/cat-level-1.png" alt="Pet">
+                </div>
+                <div class="pet-card-info">
+                    <p><strong>Level:</strong> <span id="card-pet-level">1</span></p>
+                    <p><strong>EXP:</strong> <span id="card-pet-exp">0</span>/100</p>
+                    <div class="card-exp-bar">
+                        <div id="card-exp-progress" class="card-exp-fill"></div>
+                    </div>
+                </div>
+                <div class="pet-card-actions">
+                    <a href="profile.html" class="btn-primary">View Full Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Features Section -->
     <section id="features" class="features-section">
         <div class="features-container">
@@ -237,5 +262,6 @@
 
     <script src="dataManager.js"></script>
     <script src="script.js"></script>
+    <script src="profile.js"></script>
 </body>
 </html>

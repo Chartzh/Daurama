@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Pet - Daurama</title>
+    <link rel="icon" type="image/png" href="source/Daurama_logo.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="source/Daurama_textLogo.png" alt="Daurama Logo" style="height: 50px;">
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="report.html">Report</a></li>
+                <li><a href="leaderboard.html">Leaderboard</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+            <!-- User Info Display -->
+            <div id="user-info">
+                <div class="level-badge">
+                    <img src="source/icons/star.png" alt="Star Icon" style="height: 20px;">
+                    <span>Level <span id="user-level">1</span></span>
+                </div>
+                <div class="exp-bar">
+                    <div id="exp-progress" class="exp-progress"></div>
+                    <span class="exp-text"><span id="user-exp">0</span>/100 EXP</span>
+                </div>
+                <div class="pet-preview-container">
+                    <img id="pet-preview" src="source/pets/cat-level-1.png" alt="Pet" class="pet-preview" onclick="showPetCard()">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="lang-selector">
+        <button id="lang-id" class="lang-btn active">ID</button>
+        <button id="lang-en" class="lang-btn">EN</button>
+    </div>
+
+    <!-- Profile Hero Section -->
+    <section class="profile-hero">
+        <div class="profile-container">
+            <h1 class="profile-title">
+                <i class="fas fa-user"></i>
+                Profil Pet Anda
+            </h1>
+            <p class="profile-subtitle">
+                Lihat perkembangan teman virtual Anda dalam perjalanan daur ulang!
+            </p>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Kembali ke Beranda
+            </a>
+        </div>
+    </section>
+
+    <!-- Pet Profile Section -->
+    <section class="pet-profile-section">
+        <div class="profile-container">
+            <div class="profile-card">
+                <div class="profile-image-container">
+                    <img id="pet-image" src="source/pets/cat-level-1.png" alt="Pet">
+                    <div class="pet-level-badge">
+                        Level <span id="pet-level">1</span>
+                    </div>
+                </div>
+                
+                <div class="pet-info">
+                    <h3 id="pet-name">Dauraman</h3>
+                    <p class="pet-description">Teman virtual Anda yang akan berkembang seiring dengan aktivitas daur ulang!</p>
+                    
+                    <div class="pet-stats">
+                        <div class="stat-item">
+                            <img src="source/icons/star.png" alt="Star Icon" style="height: 30px;">
+                            <span>Level: <strong id="pet-level-display">1</strong></span>
+                        </div>
+                        <div class="stat-item">
+                            <img src="source/icons/stats.png" alt="Stats Icon" style="height: 30px;">
+                            <span>EXP: <strong><span id="pet-exp">0</span>/100</strong></span>
+                        </div>
+                        <div class="stat-item">
+                            <img src="source/icons/recycle.png" alt="Recycleon" style="height: 30px;">
+                            <span>Items Recycled: <strong id="items-recycled">0</strong></span>
+                        </div>
+                        <div class="stat-item">
+                            <img src="source/icons/calender.png" alt="Calender Icon" style="height: 30px;">
+                            <span>Days Active: <strong id="days-active">0</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="exp-progress-container">
+                        <div class="exp-label">Progress to Next Level</div>
+                        <div class="pet-exp-bar">
+                            <div id="pet-exp-progress" class="pet-exp-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pet Evolution Preview -->
+            <div class="evolution-preview">
+                <h3>Evolution Stages</h3>
+                <div class="evolution-stages">
+                    <div class="evolution-stage" data-level="1">
+                        <img src="source/pets/cat-level-1.png" alt="Level 1">
+                        <span>Level 1-2</span>
+                    </div>
+                    <div class="evolution-stage" data-level="3">
+                        <img src="source/pets/cat-level-3.png" alt="Level 3">
+                        <span>Level 3-4</span>
+                    </div>
+                    <div class="evolution-stage" data-level="5">
+                        <img src="source/pets/cat-level-5.png" alt="Level 5">
+                        <span>Level 5-6</span>
+                    </div>
+                    <div class="evolution-stage" data-level="7">
+                        <img src="source/pets/cat-level-7.png" alt="Level 7">
+                        <span>Level 7+</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pet Care Tips -->
+            <div class="pet-care-tips">
+                <h3>How to Care for Your Pet</h3>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <img src="source/icons/recycle.png" alt="Recycle Icon" style="height: 50px;">
+                        <h4>Recycle More Items</h4>
+                        <p>Each successful recycling gives your pet 25 EXP points!</p>
+                    </div>
+                    <div class="tip-card">
+                        <img src="source/icons/calender.png" alt="Calender Icon" style="height: 50px;">
+                        <h4>Stay Active Daily</h4>
+                        <p>Regular activity keeps your pet happy and healthy.</p>
+                    </div>
+                    <div class="tip-card">
+                        <img src="source/icons/trophy.png" alt="trophy Icon" style="height: 50px;">
+                        <h4>Complete Challenges</h4>
+                        <p>Sorting challenges correctly helps your pet grow faster!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pet Details Card (Hidden by default) -->
+    <div id="pet-card-overlay" class="pet-card-overlay" onclick="hidePetCard()">
+        <div class="pet-card" onclick="event.stopPropagation()">
+            <div class="pet-card-header">
+                <h3 id="card-pet-name">Pipo</h3>
+                <button class="close-pet-card" onclick="hidePetCard()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="pet-card-body">
+                <div class="pet-card-image">
+                    <img id="card-pet-image" src="source/pets/cat-level-1.png" alt="Pet">
+                </div>
+                <div class="pet-card-info">
+                    <p><strong>Level:</strong> <span id="card-pet-level">1</span></p>
+                    <p><strong>EXP:</strong> <span id="card-pet-exp">0</span>/100</p>
+                    <div class="card-exp-bar">
+                        <div id="card-exp-progress" class="card-exp-fill"></div>
+                    </div>
+                </div>
+                <div class="pet-card-actions">
+                    <a href="profile.html" class="btn-primary">View Full Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dataManager.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>

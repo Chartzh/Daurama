@@ -21,6 +21,7 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="report.html">Report</a></li>
                 <li><a href="leaderboard.html">Leaderboard</a></li>
+                <li><a href="profile.html">Profile</a></li>
             </ul>
             <!-- User Info Display -->
             <div id="user-info">
@@ -32,9 +33,17 @@
                     <div id="exp-progress" class="exp-progress"></div>
                     <span class="exp-text"><span id="user-exp">0</span>/100 EXP</span>
                 </div>
+                <div class="pet-preview-container">
+                    <img id="pet-preview" src="source/pets/cat-level-1.png" alt="Pet" class="pet-preview">
+                </div>
             </div>
         </div>
     </nav>
+
+    <div class="lang-selector">
+        <button id="lang-id" class="lang-btn active">ID</button>
+        <button id="lang-en" class="lang-btn">EN</button>
+    </div>
 
     <!-- Report Hero Section (unchanged) -->
     <section class="report-hero">
@@ -87,6 +96,7 @@
 
     <script src="dataManager.js"></script>
     <script src="report.js"></script>
+    <script src="profile.js"></script>
 </body>
 
 </html>

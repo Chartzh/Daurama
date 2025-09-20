@@ -70,8 +70,16 @@ function initializeLeaderboard() {
     const leaderboardData = loadLeaderboard();
     renderLeaderboard(leaderboardData);
     updateNavbarUI();
+
+    if (typeof updatePetPreview === 'function') {
+        updatePetPreview();
+    }
+
+    const petPreview = document.getElementById('pet-preview');
+    if (petPreview && typeof showPetCard === 'function') {
+        petPreview.addEventListener('click', showPetCard);
+    }
     
-    // Auto-refresh every 30 seconds
     setInterval(() => {
         const currentData = JSON.stringify(loadLeaderboard());
         if (currentData !== window.lastLeaderboardData) {
