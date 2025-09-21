@@ -5,7 +5,7 @@ const EXP_PER_ITEM = 25;
 const EXP_TO_LEVEL_UP = 100;
 
 /**
- * Loads user data (level, exp, name) from localStorage.
+ * Loads user data (level, exp, name, petName) from localStorage.
  * @returns {object} The user data object.
  */
 function loadUserData() {
@@ -22,12 +22,53 @@ function loadUserData() {
                 saveUserData(data); 
             }
 
+            if (!data.petName) {
+                data.petName = 'Nura';
+                saveUserData(data); 
+            }
+
             return data;
         }
     } catch (e) {
         console.error("Failed to load user data:", e);
     }
-    return { level: 1, exp: 0, name: '' };
+    
+    return { 
+        level: 1, 
+        exp: 0, 
+        name: '', 
+        petName: 'Nura' 
+    };
+}
+
+/**
+ * Update pet name in user data
+ * @param {string} newPetName - The new pet name
+ */
+function updatePetName(newPetName) {
+    const user = loadUserData();
+    user.petName = newPetName.trim() || 'Nura'; // Fallback to default if empty
+    saveUserData(user);
+    
+    // Update any visible pet name displays
+    updatePetNameDisplays();
+}
+
+/**
+ * Update pet name displays across the page
+ */
+function updatePetNameDisplays() {
+    const user = loadUserData();
+    const petNameElements = [
+        document.getElementById('pet-name-display'),
+        document.getElementById('card-pet-name')
+    ];
+    
+    petNameElements.forEach(element => {
+        if (element) {
+            element.textContent = user.petName;
+        }
+    });
 }
 
 /**

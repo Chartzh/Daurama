@@ -14,6 +14,11 @@
             <div class="logo">
                 <img src="source/Daurama_textLogo.png" alt="Daurama Logo" style="height: 50px;">
             </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             <ul class="nav-menu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="report.html">Report</a></li>
@@ -63,7 +68,18 @@
                 </div>
                 
                 <div class="pet-info">
-                    <h3 id="pet-name">Nura</h3>
+                    <div class="pet-name-container">
+                        <h3 id="pet-name-display">Nura</h3>
+                        <button class="edit-pet-name-btn" id="edit-pet-name-btn" title="Edit pet name">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+
+                    <div class="pet-name-edit-form" id="pet-name-edit-form">
+                        <input type="text" id="pet-name-input" placeholder="Enter pet name" maxlength="20">
+                        <button class="btn-save" id="save-pet-name-btn">Save</button>
+                        <button class="btn-cancel" id="cancel-pet-name-btn">Cancel</button>
+                    </div>
                     <p class="pet-description">Your virtual friend that grows along with your recycling activities!</p>
                     
                     <div class="pet-stats">
@@ -170,6 +186,7 @@
     </div>
 
     <script src="dataManager.js"></script>
+    <script src="script.js"></script>
     <script src="profile.js"></script>
 </body>
 </html>

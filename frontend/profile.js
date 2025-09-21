@@ -88,13 +88,122 @@ function updatePetPreview() {
 }
 
 /**
+ * Initialize pet name editing functionality
+ */
+function initializePetNameEditing() {
+    const editBtn = document.getElementById('edit-pet-name-btn');
+    const saveBtn = document.getElementById('save-pet-name-btn');
+    const cancelBtn = document.getElementById('cancel-pet-name-btn');
+    const nameDisplay = document.getElementById('pet-name-display');
+    const nameForm = document.getElementById('pet-name-edit-form');
+    const nameInput = document.getElementById('pet-name-input');
+    
+    if (!editBtn || !saveBtn || !cancelBtn || !nameDisplay || !nameForm || !nameInput) {
+        return; // Elements not found, probably not on profile page
+    }
+    
+    // Edit button click handler
+    editBtn.addEventListener('click', function() {
+        const user = loadUserData();
+        nameInput.value = user.petName || 'Nura';
+        nameDisplay.style.display = 'none';
+        editBtn.style.display = 'none';
+        nameForm.style.display = 'flex';
+        nameInput.focus();
+        nameInput.select();
+    });
+    
+    // Save button click handler
+    saveBtn.addEventListener('click', function() {
+        const newName = nameInput.value.trim();
+        if (newName.length === 0) {
+            alert('Pet name cannot be empty!');
+            return;
+        }
+        if (newName.length > 20) {
+            alert('Pet name must be 20 characters or less!');
+            return;
+        }
+        
+        // Update pet name in data
+        updatePetName(newName);
+        
+        // Hide form and show display
+        nameForm.style.display = 'none';
+        nameDisplay.style.display = 'inline';
+        editBtn.style.display = 'inline-block';
+        
+        // Show success feedback
+        showPetNameUpdateSuccess(newName);
+    });
+    
+    // Cancel button click handler
+    cancelBtn.addEventListener('click', function() {
+        nameForm.style.display = 'none';
+        nameDisplay.style.display = 'inline';
+        editBtn.style.display = 'inline-block';
+    });
+    
+    // Handle Enter key in input
+    nameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            saveBtn.click();
+        }
+        if (e.key === 'Escape') {
+            cancelBtn.click();
+        }
+    });
+}
+
+/**
+ * Show success message when pet name is updated
+ * @param {string} newName - The new pet name
+ */
+function showPetNameUpdateSuccess(newName) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed; top: 20px; right: 20px; z-index: 3000;
+        background: linear-gradient(135deg, #4CAF50, #45a049); color: white;
+        padding: 1rem 1.5rem; border-radius: 10px; 
+        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        animation: slideInRight 0.3s ease-out;
+    `;
+    notification.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-check-circle"></i>
+            <span>Pet name updated to "${newName}"!</span>
+        </div>
+    `;
+    
+    // Add animation keyframes if not exists
+    if (!document.getElementById('pet-name-success-styles')) {
+        const style = document.createElement('style');
+        style.id = 'pet-name-success-styles';
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    setTimeout(() => { 
+        if (notification.parentNode) {
+            notification.remove(); 
+        }
+    }, 3000);
+}
+
+/**
  * Render pet profile information
  */
 function renderPetProfile() {
     const user = loadUserData();
     const level = getPetLevel(user.exp);
     const currentExp = getCurrentLevelExp(user.exp);
-    const petName = getPetName(level);
+    const petName = user.petName || 'Nura'; // Get pet name from user data
     const stats = calculatePetStats();
     
     // Update main pet image and info
@@ -102,7 +211,7 @@ function renderPetProfile() {
     const petLevelEl = document.getElementById('pet-level');
     const petLevelDisplay = document.getElementById('pet-level-display');
     const petExpEl = document.getElementById('pet-exp');
-    const petNameEl = document.getElementById('pet-name');
+    const petNameDisplay = document.getElementById('pet-name-display');
     const itemsRecycledEl = document.getElementById('items-recycled');
     const daysActiveEl = document.getElementById('days-active');
     const petExpProgress = document.getElementById('pet-exp-progress');
@@ -111,7 +220,7 @@ function renderPetProfile() {
     if (petLevelEl) petLevelEl.textContent = level;
     if (petLevelDisplay) petLevelDisplay.textContent = level;
     if (petExpEl) petExpEl.textContent = currentExp;
-    if (petNameEl) petNameEl.textContent = petName;
+    if (petNameDisplay) petNameDisplay.textContent = petName; // Use stored pet name
     if (itemsRecycledEl) itemsRecycledEl.textContent = stats.itemsRecycled;
     if (daysActiveEl) daysActiveEl.textContent = stats.daysActive;
     
@@ -151,7 +260,7 @@ function showPetCard() {
     const user = loadUserData();
     const level = getPetLevel(user.exp);
     const currentExp = getCurrentLevelExp(user.exp);
-    const petName = getPetName(level);
+    const petName = user.petName || 'Nura'; // Use stored pet name
     
     const overlay = document.getElementById('pet-card-overlay');
     const cardPetName = document.getElementById('card-pet-name');
@@ -160,7 +269,7 @@ function showPetCard() {
     const cardPetExp = document.getElementById('card-pet-exp');
     const cardExpProgress = document.getElementById('card-exp-progress');
     
-    if (cardPetName) cardPetName.textContent = petName;
+    if (cardPetName) cardPetName.textContent = petName; // Use stored pet name
     if (cardPetImage) cardPetImage.src = getPetImageByLevel(level);
     if (cardPetLevel) cardPetLevel.textContent = level;
     if (cardPetExp) cardPetExp.textContent = currentExp;
@@ -190,6 +299,9 @@ function hidePetCard() {
  */
 function initializeProfile() {
     renderPetProfile();
+    
+    // Initialize pet name editing (only on profile page)
+    initializePetNameEditing();
     
     // Add click event to pet preview if it exists
     const petPreview = document.getElementById('pet-preview');
