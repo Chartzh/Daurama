@@ -125,6 +125,9 @@ const materialDatabase = {
 };
 
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+});
 
 app.post('/analyze', upload.single('image'), async (req, res) => {
     if (!req.file) {
