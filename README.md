@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="frontend/source/Daurama_textLogo.png" width="500" alt="Daurama Logo">
+</p>
+
 # Daurama - Recycling Just Got Fun
 
 Daurama is a smart, interactive web application that transforms the confusing chore of recycling into a fun and rewarding experience. Developed as a final project for the Hacktiv8 x IBM bootcamp, Daurama uses AI to identify waste and gamifies the process of learning proper waste management.
