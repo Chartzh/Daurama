@@ -1,6 +1,8 @@
 <p align="center">
-  <img src="frontend/source/Daurama_textLogo.png" width="500" alt="Daurama Logo">
+  <img src="frontend/source/Daurama_textLogo.png" width="700" alt="Daurama Logo">
 </p>
+
+---
 
 # Daurama - Recycling Just Got Fun
 
