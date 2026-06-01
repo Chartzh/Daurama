@@ -6,6 +6,7 @@
     <title>Daurama - Smart Waste Management</title>
     <link rel="icon" type="image/png" href="source/Daurama_logo.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -115,49 +116,6 @@
         </div>
     </section>
 
-    <section class="game-section" id="minigame-wrapper">
-        <div class="game-container">
-            <h3 class="game-title">Sorting Challenge</h3>
-            <p>Drag the item to the correct recycling bin!</p>
-            
-            <div id="item-container">
-                </div>
-
-            <div class="drop-zones-container">
-                <div class="drop-zone" id="anorganik-zone">
-                    <img src="source/inorganic.png" alt="Anorganik" width="100">
-                    <span class="bin-label" id="inorganic-bin-label">Inorganic</span> </div>
-                <div class="drop-zone" id="organik-zone">
-                    <img src="source/organic.png" alt="Organik" width="100">
-                    <span class="bin-label" id="organic-bin-label">Organic</span> </div>
-                <div class="drop-zone" id="kaca-zone">
-                    <img src="source/glass.png" alt="Kaca" width="100">
-                    <span class="bin-label" id="glass-bin-label">Glass</span> </div>
-            </div>
-        </div>
-    </section>
-
-    <div id="success-popup" class="popup-container">
-        <div class="popup-content">
-            <span class="close-btn">&times;</span>
-            <div style="font-size: 3rem; color: #4CAF50; margin-bottom: 1rem;">
-                <img src="source/icons/checklist.png" alt="Checklist Icon" style="height: 25px;">
-            </div>
-            <h3>Congratulations!</h3>
-            <p>You successfully recycled the item correctly!</p>
-            <p style="margin-top: 1rem; color: #666;">Your environmental impact has been saved to your report.</p>
-        </div>
-    </div>
-
-    <div id="name-input-popup" class="popup-container">
-        <div class="popup-content">
-            <span class="close-btn" id="closeNamePopup">&times;</span>
-            <h3><span id="enterNameTitle">Enter Your Name</span></h3>
-            <p id="enterNamePrompt">Enter your name for the Leaderboard:</p>
-            <input type="text" id="userNameInput" placeholder="Your Name" maxlength="20" class="name-input-field">
-            <button id="submitNameBtn" class="btn-primary" style="margin-top: 1rem;">Submit</button>
-        </div>
-    </div>
 
     <div id="pet-card-overlay" class="pet-card-overlay" onclick="hidePetCard()">
         <div class="pet-card" onclick="event.stopPropagation()">

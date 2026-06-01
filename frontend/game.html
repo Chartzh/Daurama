@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daurama Trash Hoops - Arcade Game</title>
+    <link rel="icon" type="image/png" href="source/Daurama_logo.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="retro-game-body">
+    <!-- Full-screen Red Failure Overlay -->
+    <div id="retro-failure-overlay" class="retro-vignette-overlay"></div>
+
+    <!-- Main Game Page Container -->
+    <div class="retro-fullscreen-game" id="game-page-container">
+        <!-- Top Arcade HUD -->
+        <div class="retro-hud">
+            <div class="hud-box score-box">
+                <div class="retro-hud-label">SCORE</div>
+                <div id="retro-score" class="retro-hud-val">00000</div>
+            </div>
+            
+            <div class="hud-box center-title-box">
+                <h1 class="hud-title">TRASH HOOPS</h1>
+                <div class="hud-item-name">ITEM: <span id="retro-item-name">-</span></div>
+            </div>
+            
+            <div class="hud-box target-box">
+                <div class="retro-hud-label">TARGET BIN</div>
+                <div id="retro-target" class="retro-hud-val">-</div>
+            </div>
+        </div>
+
+        <!-- The Side-View Court -->
+        <div class="retro-physics-court" id="retro-physics-court">
+            <!-- Retro Court Ground/Background Line -->
+            <div class="retro-physics-bg">
+                <div class="retro-physics-ground"></div>
+            </div>
+
+            <!-- Slingshot bands overlay SVG -->
+            <svg id="slingshot-svg" class="slingshot-svg">
+                <line id="slingshot-line1" x1="0" y1="0" x2="0" y2="0" />
+                <line id="slingshot-line2" x1="0" y1="0" x2="0" y2="0" />
+            </svg>
+
+            <!-- Left Side: Ball Launcher -->
+            <div class="retro-physics-left">
+                <!-- Ball Launcher Area -->
+                <div class="ball-launcher-area">
+                    <!-- Trajectory dots for path prediction -->
+                    <div id="trajectory-dots-container" class="trajectory-dots-container">
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                        <div class="trajectory-dot-pred"></div>
+                    </div>
+
+                    <!-- Trash Ball inside wrapper for linear X / parabolic Y -->
+                    <div id="trash-ball-wrapper" class="trash-ball-wrapper physics-ball-wrapper">
+                        <div id="trash-ball" class="trash-ball">
+                            <!-- Populated in game.js with user image or default icon -->
+                        </div>
+                    </div>
+                    
+                    <!-- Launcher Base visual -->
+                    <div class="launcher-stand"></div>
+                </div>
+            </div>
+
+            <!-- Right Side: 3 Stationary Bins with Hoops -->
+            <div class="retro-physics-right">
+                <!-- Organik Bin (Leftmost of the bins) -->
+                <div class="retro-physics-bin" id="bin-organik" data-category="organik">
+                    <div class="physics-hoop-rim"></div>
+                    <img src="source/organic.png" alt="Organic" class="physics-bin-img">
+                    <div class="physics-bin-label">ORGANIC</div>
+                </div>
+
+                <!-- Anorganik Bin (Middle) -->
+                <div class="retro-physics-bin" id="bin-anorganik" data-category="anorganik">
+                    <div class="physics-hoop-rim"></div>
+                    <img src="source/inorganic.png" alt="Inorganic" class="physics-bin-img">
+                    <div class="physics-bin-label">INORGANIC</div>
+                </div>
+
+                <!-- B3 Bin (Rightmost/Furthest) -->
+                <div class="retro-physics-bin" id="bin-b3" data-category="kaca">
+                    <div class="physics-hoop-rim"></div>
+                    <img src="source/glass.png" alt="Glass" class="physics-bin-img">
+                    <div class="physics-bin-label">GLASS</div>
+                </div>
+            </div>
+
+            <!-- Floating visual feedback (SWISH! / MISS!) -->
+            <div id="retro-feedback" class="retro-feedback"></div>
+        </div>
+
+        <!-- Footer Control Dashboard -->
+        <div class="retro-footer">
+            <div class="footer-hint">DRAG AND PULL BACK THE BALL, RELEASE TO LAUNCH!</div>
+            <button id="shoot-btn" class="retro-btn btn-primary shoot-btn">DRAG BALL TO AIM</button>
+        </div>
+    </div>
+
+    <!-- Success Modal Popup -->
+    <div id="success-popup" class="popup-container">
+        <div class="retro-popup-content">
+            <div class="retro-popup-header">
+                <img src="source/icons/checklist.png" alt="Checklist" class="retro-popup-icon">
+                <h3>GREAT SHOT!</h3>
+            </div>
+            <p class="retro-popup-msg">RECYCLED SUCCESSFULLY!</p>
+            
+            <!-- Environmental Impact statistics -->
+            <div class="retro-impact-box">
+                <div class="impact-title">ENVIRONMENTAL IMPACT:</div>
+                <table class="retro-impact-table">
+                    <tr>
+                        <td>CO2 SAVED:</td>
+                        <td id="retro-impact-co2">-</td>
+                    </tr>
+                    <tr>
+                        <td>ENERGY:</td>
+                        <td id="retro-impact-energy">-</td>
+                    </tr>
+                    <tr>
+                        <td>WATER:</td>
+                        <td id="retro-impact-water">-</td>
+                    </tr>
+                    <tr>
+                        <td>DECOMPOSE:</td>
+                        <td id="retro-impact-decompose">-</td>
+                    </tr>
+                </table>
+            </div>
+            <button id="return-btn" class="retro-btn btn-primary" style="margin-top: 10px; width: 100%;">VIEW ANALYSIS RESULT</button>
+        </div>
+    </div>
+
+    <!-- Leaderboard Name Input Popup -->
+    <div id="name-input-popup" class="popup-container">
+        <div class="retro-popup-content">
+            <div class="retro-popup-header">
+                <h3>NEW RECORD!</h3>
+            </div>
+            <p class="retro-popup-msg">ENTER YOUR NAME FOR LEADERBOARD:</p>
+            <input type="text" id="userNameInput" placeholder="PLAYER NAME" maxlength="20" class="retro-name-input">
+            <button id="submitNameBtn" class="retro-btn btn-primary" style="width: 100%;">SUBMIT</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="dataManager.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

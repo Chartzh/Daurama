@@ -1,6 +1,12 @@
 let draggedItem = null;
 let isGameActive = false; 
 
+// Global variables for Daurama Trash Hoops
+let kategoriSampahAI = "anorganik";
+let trashHoopsScore = 0;
+let isBallFlying = false;
+let activeResultData = null;
+
 // Show level up notification
 function showLevelUpNotification() {
     const user = loadUserData(); 
@@ -194,60 +200,23 @@ function initializeAnalyzeButton() {
 
             const randomResult = mockResults[Math.floor(Math.random() * mockResults.length)];
 
-            // Update result display with null checks
-            const objectNameDisplay = document.getElementById('objectNameDisplay');
-            const instructionsDisplay = document.getElementById('instructionsDisplay');
-            const materialDisplay = document.getElementById('materialDisplay');
-            const ecoImpactDisplay = document.getElementById('ecoImpactDisplay');
-            const resultSection = document.getElementById('result');
-
-            if (objectNameDisplay) objectNameDisplay.textContent = randomResult.object_name;
-            if (instructionsDisplay) instructionsDisplay.textContent = randomResult.instructions;
-
-            if (materialDisplay) {
-                materialDisplay.textContent = randomResult.material;
+            // Save active game data to localStorage for the fullscreen game page
+            localStorage.setItem('dauramaActiveGame', JSON.stringify(randomResult));
+            const preview = document.getElementById('preview');
+            if (preview && preview.src && preview.src !== "" && preview.parentNode.style.display !== 'none') {
+                localStorage.setItem('dauramaActivePreview', preview.src);
+            } else {
+                localStorage.removeItem('dauramaActivePreview');
             }
 
-            if (ecoImpactDisplay) {
-                ecoImpactDisplay.innerHTML = `
-                    <div class="eco-impact-item">
-                        <span class="eco-label">COÂ² Saved:</span>
-                        <span class="eco-value">${randomResult.eco_impact.co2}</span>
-                    </div>
-                    <div class="eco-impact-item">
-                        <span class="eco-label">Energy Saved:</span>
-                        <span class="eco-value">${randomResult.eco_impact.energy}</span>
-                    </div>
-                    <div class="eco-impact-item">
-                        <span class="eco-label">Water Saved:</span>
-                        <span class="eco-value">${randomResult.eco_impact.water}</span>
-                    </div>
-                    <div class="eco-impact-item">
-                        <span class="eco-label">Natural Decompose Time:</span>
-                        <span class="eco-value">${randomResult.eco_impact.decompose_time}</span>
-                    </div>
-                `;
-            }
-
-            if (resultSection) {
-                resultSection.style.display = 'block';
-            }
-
-            const viewReportBtn = document.getElementById('viewReportBtn');
-            if (viewReportBtn) {
-                viewReportBtn.style.display = 'inline-block';
-            }
-
-            startGame(randomResult.type, randomResult);
-            
+            // Reset analyze button state
             if (analyzeText) {
                 analyzeText.textContent = 'Analyze Waste';
             }
             analyzeBtn.disabled = false;
 
-            if (resultSection) {
-                resultSection.scrollIntoView({ behavior: 'smooth' });
-            }
+            // Redirect to the fullscreen game page
+            window.location.href = 'game.html';
         }, 2000);
     });
 }
@@ -288,181 +257,78 @@ function initializeDragAndDrop() {
     });
 }
 
-// Mini-game functionality with data storage
-function startGame(itemType, resultData) {
-    const gameSection = document.getElementById('minigame-wrapper');
-    const itemContainer = document.getElementById('item-container');
-    
-    if (!gameSection || !itemContainer) {
-        console.log('Game elements not found - probably not on index page');
-        return;
-    }
-    
-    const item = document.createElement('div');
-    item.className = 'draggable-item';
-    item.draggable = true;
-    item.innerHTML = getItemIcon(itemType);
-    item.dataset.type = itemType;
-    item.dataset.result = JSON.stringify(resultData);
+// Check if we just returned from a successful game and should display results
+function checkGameReturn() {
+    const showResultFlag = localStorage.getItem('dauramaShowResult');
+    if (showResultFlag === 'true') {
+        localStorage.removeItem('dauramaShowResult');
+        
+        try {
+            const activeGameData = JSON.parse(localStorage.getItem('dauramaActiveGame'));
+            if (activeGameData) {
+                // Populate result card elements
+                const objectNameDisplay = document.getElementById('objectNameDisplay');
+                const instructionsDisplay = document.getElementById('instructionsDisplay');
+                const materialDisplay = document.getElementById('materialDisplay');
+                const ecoImpactDisplay = document.getElementById('ecoImpactDisplay');
+                const resultSection = document.getElementById('result');
+                const preview = document.getElementById('preview');
+                const previewContainer = document.querySelector('.preview-container');
+                const viewReportBtn = document.getElementById('viewReportBtn');
 
-    itemContainer.innerHTML = '';
-    itemContainer.appendChild(item);
+                if (objectNameDisplay) objectNameDisplay.textContent = activeGameData.object_name;
+                if (instructionsDisplay) instructionsDisplay.textContent = activeGameData.instructions;
+                if (materialDisplay) materialDisplay.textContent = activeGameData.material;
+                
+                if (ecoImpactDisplay) {
+                    ecoImpactDisplay.innerHTML = `
+                        <div class="eco-impact-item">
+                            <span class="eco-label">CO² Saved:</span>
+                            <span class="eco-value">${activeGameData.eco_impact.co2}</span>
+                        </div>
+                        <div class="eco-impact-item">
+                            <span class="eco-label">Energy Saved:</span>
+                            <span class="eco-value">${activeGameData.eco_impact.energy}</span>
+                        </div>
+                        <div class="eco-impact-item">
+                            <span class="eco-label">Water Saved:</span>
+                            <span class="eco-value">${activeGameData.eco_impact.water}</span>
+                        </div>
+                        <div class="eco-impact-item">
+                            <span class="eco-label">Natural Decompose Time:</span>
+                            <span class="eco-value">${activeGameData.eco_impact.decompose_time}</span>
+                        </div>
+                    `;
+                }
 
-    item.addEventListener('dragstart', (e) => {
-        draggedItem = e.target;
-        e.target.style.opacity = '0.5';
-    });
-    item.addEventListener('dragend', (e) => {
-        e.target.style.opacity = '1';
-        draggedItem = null;
-    });
+                // Restore image preview if available
+                const savedPreview = localStorage.getItem('dauramaActivePreview');
+                if (savedPreview && preview && previewContainer) {
+                    preview.src = savedPreview;
+                    previewContainer.style.display = 'flex';
+                }
 
-    isGameActive = true;
-    gameSection.style.display = 'block';
-}
+                // Display result section and scroll to it
+                if (resultSection) {
+                    resultSection.style.display = 'block';
+                    setTimeout(() => {
+                        resultSection.scrollIntoView({ behavior: 'smooth' });
+                    }, 400);
+                }
 
-function getItemIcon(type) {
-    const icons = {
-        'anorganik': '<img src="source/icons/plastic_bottle.png" alt="Inorganic" class="game-icon">',
-        'organik': '<img src="source/icons/box.png" alt="Organic" class="game-icon">',
-        'kaca': '<img src="source/icons/glass_bottle.png" alt="Glass" class="game-icon">'
-    };
-    const defaultIcon = '<img src="source/icons/trashcan_category.png" alt="Waste" class="game-icon">';
-    
-    return icons[type] || defaultIcon;
-}
-
-function handleDrop(e) {
-    e.preventDefault();
-    const dropZone = this;
-    dropZone.classList.remove('drag-over');
-
-    if (draggedItem && isGameActive) {
-        const itemType = draggedItem.dataset.type;
-        const zoneType = dropZone.id.replace('-zone', '');
-
-        if (itemType === zoneType) {
-            isGameActive = false;
-
-            const resultData = JSON.parse(draggedItem.dataset.result);
-            processSuccessfulSort(resultData); 
-            
-            draggedItem.remove();
-
-            const gameSection = document.getElementById('minigame-wrapper');
-            if (gameSection) {
-                setTimeout(() => {
-                    gameSection.style.display = 'none';
-                }, 500);
+                if (viewReportBtn) {
+                    viewReportBtn.style.display = 'inline-block';
+                }
             }
-
-        } else {
-            dropZone.classList.add('drop-incorrect');
-            setTimeout(() => {
-                dropZone.classList.remove('drop-incorrect');
-            }, 600);
+        } catch (e) {
+            console.error("Failed to parse game return data:", e);
         }
     }
 }
 
-function processSuccessfulSort(resultData) {
-    const user = loadUserData();
-    const oldExp = user.exp;
-    
-    if (user.name && user.name !== 'Anonymous') {
-        saveDataAndAddExp(user.name, resultData);
-        
-        const newUser = loadUserData();
-        if (typeof checkLevelUp === 'function') {
-            checkLevelUp(oldExp, newUser.exp);
-        }
-        
-        showSuccessPopup();
-    } else {
-        showNameInputPopup(resultData, oldExp);
-    }
-}
-
-function showNameInputPopup(resultData, oldExp) {
-    const nameInputPopup = document.getElementById('name-input-popup');
-    const userNameInput = document.getElementById('userNameInput');
-    const submitNameBtn = document.getElementById('submitNameBtn');
-    
-    if (!nameInputPopup || !userNameInput || !submitNameBtn) {
-        console.log('Name input popup elements not found');
-        return;
-    }
-    
-    nameInputPopup.style.display = 'flex';
-
-    submitNameBtn.addEventListener('click', function handleSubmit() {
-        let userName = userNameInput.value.trim() || 'Anonymous';
-        const user = loadUserData();
-        user.name = userName;
-        saveUserData(user);
-        saveDataAndAddExp(userName, resultData);
-        
-        const newUser = loadUserData();
-        if (typeof checkLevelUp === 'function') {
-            checkLevelUp(oldExp, newUser.exp);
-        }
-        
-        nameInputPopup.style.display = 'none';
-        showSuccessPopup();
-    }, { once: true });
-}
-
-function saveDataAndAddExp(userName, resultData) {
-    saveToHistory(resultData);
-    updateLeaderboard(userName, resultData);
-    addExp(EXP_PER_ITEM);
-}
-
-function showSuccessPopup() {
-    const popup = document.getElementById('success-popup');
-    if (popup) {
-        popup.style.display = 'flex';
-        // Auto close after 3 seconds
-        setTimeout(() => {
-            popup.style.display = 'none';
-        }, 3000);
-    }
-}
-
-// Initialize drop zones
-function initializeDropZones() {
-    const dropZones = document.querySelectorAll('.drop-zone');
-    if (dropZones.length === 0) {
-        console.log('Drop zones not found - probably not on index page');
-        return;
-    }
-    
-    dropZones.forEach(zone => {
-        zone.addEventListener('dragover', (e) => e.preventDefault());
-        zone.addEventListener('drop', handleDrop);
-        zone.addEventListener('dragenter', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
-        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-    });
-}
-
-// Initialize popup close buttons
-function initializePopups() {
-    const closeSuccessBtn = document.querySelector('#success-popup .close-btn');
-    if (closeSuccessBtn) {
-        closeSuccessBtn.addEventListener('click', function() {
-            const popup = document.getElementById('success-popup');
-            if (popup) popup.style.display = 'none';
-        });
-    }
-
-    const closeNamePopupBtn = document.querySelector('#name-input-popup .close-btn');
-    if (closeNamePopupBtn) {
-        closeNamePopupBtn.addEventListener('click', function() {
-            const popup = document.getElementById('name-input-popup');
-            if (popup) popup.style.display = 'none';
-        });
-    }
-}
+function startGame() {}
+function initializeTrashHoops() {}
+function initializePopups() {}
 
 // Initialize view report button
 function initializeViewReportButton() {
@@ -525,9 +391,10 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeImageUpload();
     initializeAnalyzeButton();
     initializeDragAndDrop();
-    initializeDropZones();
+    initializeTrashHoops();
     initializePopups();
     initializeViewReportButton();
+    checkGameReturn();
     
     console.log('All components initialized successfully!');
 });
